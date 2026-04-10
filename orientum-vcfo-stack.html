@@ -2311,13 +2311,8 @@ function unlockReport() {
 }
 
 async function generateAIReport() {
-  // ── API KEY — stored in browser localStorage ──
-  const apiKey = localStorage.getItem('orientum_vcfo_apikey') || '';
-  if (!apiKey) {
-    const k = prompt('Enter your Anthropic API key (stored locally, never shared):\nGet one free at console.anthropic.com');
-    if (!k || !k.startsWith('sk-ant-')) { alert('Invalid API key — must start with sk-ant-'); return; }
-    localStorage.setItem('orientum_vcfo_apikey', k.trim());
-  }
+  // ── PROXY — calls Netlify function which holds the API key server-side ──
+  const PROXY_URL = '/.netlify/functions/claude-proxy';
   const bn       = document.getElementById('rpt-bn')?.value || '—';
   const opName   = document.getElementById('rpt-op-name')?.value || '';
   const yearEnd  = document.getElementById('rpt-yearend')?.value || '2025-12';
@@ -2425,14 +2420,9 @@ CORPORATE TAX ESTIMATE: $${Math.round(d.corpTax).toLocaleString('en-CA')}
     statusText.textContent = section.statusText;
     statusSub.textContent  = section.statusSub;
     try {
-      const resp = await fetch('https://api.anthropic.com/v1/messages', {
+      const resp = await fetch(PROXY_URL, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-api-key': localStorage.getItem('orientum_vcfo_apikey') || '',
-          'anthropic-version': '2023-06-01',
-          'anthropic-dangerous-direct-browser-access': 'true'
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           model: 'claude-sonnet-4-20250514',
           max_tokens: 1000,
@@ -2575,200 +2565,7 @@ function collectFinancialData() {
   return { gross, netRev, hstColl, hstRem, total, totalInc, housing, business, medical, pets, family, transport, disc, financial, totalExp, balance, hstPayable, corpTax };
 }
 
-async function generateAIReport() {
-  const corpName = document.getElementById('rpt-corp-name')?.value || 'the corporation';
-  const bn       = document.getElementById('rpt-bn')?.value || '—';
-  const opName   = document.getElementById('rpt-op-name')?.value || '';
-  const yearEnd  = document.getElementById('rpt-yearend')?.value || '2025-12';
-  const meeting  = document.getElementById('rpt-meeting')?.value || '';
-  const preparer = document.getElementById('rpt-preparer')?.value || 'Orientum Advisory';
-  const industry = document.getElementById('rpt-industry')?.value || 'professional services';
-  const notes    = document.getElementById('rpt-notes')?.value || '';
-  const today    = new Date().toLocaleDateString('en-CA', { year:'numeric', month:'long', day:'numeric' });
 
-  const d = collectFinancialData();
-  const ratio = d.totalInc > 0 ? ((d.totalExp/d.totalInc)*100).toFixed(1) : '0';
-  const hstMethodLabel = hstMethod === 'quick' ? 'Quick Method' : 'Regular Method';
-
-  // Show status bar
-  const statusBar = document.getElementById('ai-status-bar');
-  const statusText = document.getElementById('ai-status-text');
-  const statusSub  = document.getElementById('ai-status-sub');
-  const placeholder = document.getElementById('report-placeholder');
-  const preview = document.getElementById('report-preview');
-
-  statusBar.style.display = 'flex';
-  placeholder.style.display = 'none';
-  preview.style.display = 'none';
-  preview.innerHTML = '';
-
-  // Build structured data prompt for Claude
-  const financialContext = `
-CLIENT: ${corpName}${opName ? ' (operating as ' + opName + ')' : ''}
-INDUSTRY: ${industry}
-YEAR END: ${yearEnd}
-PREPARED BY: ${preparer}
-MEETING DATE: ${meeting || today}
-ADVISOR NOTES: ${notes || 'None'}
-
-REVENUE:
-- Annual Gross Revenue: $${Math.round(d.gross).toLocaleString('en-CA')}
-- HST Collected: $${Math.round(d.hstColl).toLocaleString('en-CA')}
-- HST Method: ${hstMethodLabel}
-- HST Remittable: $${Math.round(d.hstPayable).toLocaleString('en-CA')}
-- Net Revenue to Corporation: $${Math.round(d.netRev).toLocaleString('en-CA')}
-- Monthly Run Rate: $${Math.round(d.gross/12).toLocaleString('en-CA')}
-
-MONTHLY BUDGET:
-- Total Income: $${Math.round(d.totalInc).toLocaleString('en-CA')}
-- Housing Costs: $${Math.round(d.housing).toLocaleString('en-CA')}
-- Business Expenses: $${Math.round(d.business).toLocaleString('en-CA')}
-- Medical: $${Math.round(d.medical).toLocaleString('en-CA')}
-- Family: $${Math.round(d.family).toLocaleString('en-CA')}
-- Transportation: $${Math.round(d.transport).toLocaleString('en-CA')}
-- Discretionary: $${Math.round(d.disc).toLocaleString('en-CA')}
-- Financial/Savings: $${Math.round(d.financial).toLocaleString('en-CA')}
-- Total Expenses: $${Math.round(d.totalExp).toLocaleString('en-CA')}
-- Net Monthly Balance: $${Math.round(d.balance).toLocaleString('en-CA')}
-- Expense Ratio: ${ratio}%
-
-CORPORATE TAX ESTIMATE: $${Math.round(d.corpTax).toLocaleString('en-CA')}
-`;
-
-  const sections = [
-    {
-      key: 'executive',
-      label: 'Executive Summary',
-      statusText: 'Writing executive summary...',
-      statusSub: 'Synthesizing overall financial position',
-      prompt: `You are a Virtual CFO at a top accounting and advisory firm (like KPMG or Grant Thornton). Write a 3-paragraph executive summary for the business review meeting with ${corpName}, a ${industry} company. Use the financial data below. Paragraph 1: overall financial health and revenue position. Paragraph 2: budget and expense analysis. Paragraph 3: key strategic priorities for this period. Write in a professional but conversational advisory tone — like a trusted CFO speaking to the business owner. Be specific about the numbers. Do NOT use bullet points. Return only the paragraphs with no headers or labels.\n\nFINANCIAL DATA:\n${financialContext}`
-    },
-    {
-      key: 'revenue',
-      label: 'Revenue Analysis',
-      statusText: 'Analysing revenue streams...',
-      statusSub: 'Reviewing gross revenue and HST position',
-      prompt: `You are a Virtual CFO. Write 2 paragraphs analysing the revenue position of ${corpName} (${industry}). Discuss: (1) the annual gross revenue, monthly run rate, and what this means for the business stage; (2) the HST position using the ${hstMethodLabel} — whether this is appropriate given their revenue level, and any planning considerations. Be specific with the numbers. Professional tone, no bullet points, no headers.\n\nFINANCIAL DATA:\n${financialContext}`
-    },
-    {
-      key: 'budget',
-      label: 'Budget & Expense Insights',
-      statusText: 'Evaluating budget performance...',
-      statusSub: 'Analysing expense ratios and cash flow',
-      prompt: `You are a Virtual CFO. Write 2 paragraphs providing budget and expense insights for ${corpName} (${industry}). Discuss: (1) the overall expense ratio of ${ratio}% and what it says about operational efficiency, highlighting the largest expense categories; (2) the monthly net balance of $${Math.round(d.balance).toLocaleString('en-CA')} and what the owner should be doing with this surplus or how to address a deficit. Be direct and actionable. Professional tone, no bullet points, no headers.\n\nFINANCIAL DATA:\n${financialContext}`
-    },
-    {
-      key: 'hst',
-      label: 'HST & Tax Planning',
-      statusText: 'Preparing HST and tax analysis...',
-      statusSub: 'Reviewing HST method and corporate tax position',
-      prompt: `You are a Virtual CFO specialising in Canadian tax. Write 2 paragraphs on HST and corporate tax planning for ${corpName} (${industry}). Discuss: (1) the HST ${hstMethodLabel} — the annual HST remittance of $${Math.round(d.hstPayable).toLocaleString('en-CA')} and any planning notes (e.g. if near the $400K threshold, quarterly vs annual filing, ITC opportunities); (2) the estimated corporate tax of $${Math.round(d.corpTax).toLocaleString('en-CA')} and salary/dividend mix considerations for the owner. Be specific and practical. Professional tone, no bullet points, no headers.\n\nFINANCIAL DATA:\n${financialContext}`
-    },
-    {
-      key: 'recommendations',
-      label: 'CFO Recommendations',
-      statusText: 'Generating strategic recommendations...',
-      statusSub: 'Finalising action items and priorities',
-      prompt: `You are a Virtual CFO. Write 2 paragraphs of forward-looking CFO recommendations for ${corpName} (${industry})${notes ? ', keeping in mind: ' + notes : ''}. Paragraph 1: top 3 financial priorities for the next 90 days (specific, actionable). Paragraph 2: longer-term strategic considerations for the fiscal year — payroll optimisation, retained earnings, investment opportunities, succession or growth planning. Reference specific numbers from their data. Write as a trusted advisor. Professional tone, no bullet points, no headers.\n\nFINANCIAL DATA:\n${financialContext}`
-    }
-  ];
-
-  // Generate each section via API
-  const sectionResults = {};
-  statusText.textContent = 'Assembling report...';
-  statusSub.textContent  = 'Formatting your Business Review';
-
-  // Build the final report HTML
-  const nameDisplay = opName && opName !== corpName ? `${corpName}<br><span style="font-size:13px;font-weight:400;color:#6b6b6b">${opName}</span>` : corpName;
-
-  preview.innerHTML = `
-    <div style="max-width:860px;margin:0 auto;background:#fff;border:1px solid var(--border);border-radius:8px;padding:56px 64px;font-family:'DM Sans',sans-serif">
-
-      <!-- COVER -->
-      <div style="display:flex;justify-content:space-between;align-items:flex-start;padding-bottom:24px;margin-bottom:32px;border-bottom:3px solid #000">
-        <div>
-          <div style="font-size:10px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:var(--amber);margin-bottom:8px">Orientum Advisory</div>
-          <div style="font-family:'Playfair Display',serif;font-size:30px;font-weight:900;color:#000;line-height:1.15">Business Review<br>Report</div>
-          <div style="font-size:13px;color:#6b6b6b;margin-top:8px">Prepared by ${preparer} &nbsp;·&nbsp; ${today}</div>
-        </div>
-        <div style="text-align:right">
-          <div style="font-size:16px;font-weight:700;color:#000;line-height:1.4">${nameDisplay}</div>
-          ${bn !== '—' ? `<div style="font-size:12px;color:#6b6b6b;margin-top:4px">BN: ${bn}</div>` : ''}
-          <div style="font-size:12px;color:#6b6b6b">Year End: ${yearEnd}</div>
-          ${meeting ? `<div style="font-size:12px;color:#6b6b6b">Meeting: ${meeting}</div>` : ''}
-        </div>
-      </div>
-
-      <!-- KPI STRIP -->
-      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:#e8e6e0;border:1px solid #e8e6e0;border-radius:6px;overflow:hidden;margin-bottom:36px">
-        ${[
-          ['Annual Revenue', '$'+Math.round(d.gross).toLocaleString('en-CA'), ''],
-          ['Net Revenue', '$'+Math.round(d.netRev).toLocaleString('en-CA'), 'after HST'],
-          ['Monthly Balance', '$'+Math.round(d.balance).toLocaleString('en-CA'), (d.balance>=0?'surplus':'deficit')],
-          ['HST Payable', '$'+Math.round(d.hstPayable).toLocaleString('en-CA'), hstMethodLabel]
-        ].map(([label,val,sub])=>`
-          <div style="background:#fff;padding:16px 18px">
-            <div style="font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#a8a8a8;margin-bottom:6px">${label}</div>
-            <div style="font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:#000">${val}</div>
-            ${sub?`<div style="font-size:11px;color:#6b6b6b;margin-top:2px">${sub}</div>`:''}
-          </div>`).join('')}
-      </div>
-
-      <!-- AI NARRATIVE SECTIONS -->
-      ${sections.map(s => `
-      <div style="margin-bottom:32px">
-        <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px">
-          <div style="height:2px;width:28px;background:var(--amber);flex-shrink:0"></div>
-          <div style="font-family:'Playfair Display',serif;font-size:17px;font-weight:700;color:#000">${s.label}</div>
-        </div>
-        <div style="font-size:13.5px;line-height:1.85;color:#2d2d2d">${(sectionResults[s.key]||'').split('\n\n').map(p=>`<p style="margin-bottom:14px">${p.trim()}</p>`).join('')}</div>
-      </div>`).join('')}
-
-      <!-- DATA TABLES -->
-      <div style="margin-top:36px;padding-top:28px;border-top:2px solid #e8e6e0">
-        <div style="font-family:'Playfair Display',serif;font-size:17px;font-weight:700;color:#000;margin-bottom:16px">Supporting Data</div>
-
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
-          <!-- Revenue -->
-          <div>
-            <div style="font-size:10px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#a8a8a8;margin-bottom:8px">Revenue Overview</div>
-            <table style="width:100%;border-collapse:collapse;font-size:12.5px">
-              ${[
-                ['Gross Revenue',`$${Math.round(d.gross).toLocaleString('en-CA')}`],
-                ['HST Collected',`$${Math.round(d.hstColl).toLocaleString('en-CA')}`],
-                ['HST Remittable ('+hstMethodLabel+')',`$${Math.round(d.hstPayable).toLocaleString('en-CA')}`],
-                ['Net to Corporation',`$${Math.round(d.netRev).toLocaleString('en-CA')}`],
-              ].map(([l,v],i)=>`<tr style="background:${i%2?'#fafaf8':'#fff'}"><td style="padding:7px 10px;color:#444">${l}</td><td style="padding:7px 10px;text-align:right;font-weight:600">${v}</td></tr>`).join('')}
-            </table>
-          </div>
-          <!-- Budget -->
-          <div>
-            <div style="font-size:10px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#a8a8a8;margin-bottom:8px">Monthly Budget</div>
-            <table style="width:100%;border-collapse:collapse;font-size:12.5px">
-              ${[
-                ['Total Income',`$${Math.round(d.totalInc).toLocaleString('en-CA')}`],
-                ['Business Expenses',`$${Math.round(d.business).toLocaleString('en-CA')}`],
-                ['Housing',`$${Math.round(d.housing).toLocaleString('en-CA')}`],
-                ['Financial/Savings',`$${Math.round(d.financial).toLocaleString('en-CA')}`],
-                ['Net Balance',`$${Math.round(d.balance).toLocaleString('en-CA')}`],
-              ].map(([l,v],i)=>`<tr style="background:${i%2?'#fafaf8':'#fff'}"><td style="padding:7px 10px;color:#444">${l}</td><td style="padding:7px 10px;text-align:right;font-weight:600">${v}</td></tr>`).join('')}
-            </table>
-          </div>
-        </div>
-      </div>
-
-      <!-- FOOTER -->
-      <div style="margin-top:36px;padding-top:16px;border-top:1px solid #e8e6e0;display:flex;justify-content:space-between;align-items:center;font-size:11px;color:#a8a8a8">
-        <span>Generated by Orientum Virtual CFO Stack &nbsp;·&nbsp; AI-Powered Business Review</span>
-        <span>${today}</span>
-      </div>
-    </div>
-  `;
-
-  statusBar.style.display = 'none';
-  preview.style.display = 'block';
-  preview.scrollIntoView({ behavior: 'smooth', block: 'start' });
-}
 // ── INIT ──
 (function init() {
   calcRevenue();
