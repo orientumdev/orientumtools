@@ -1,0 +1,2618 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Orientum | Virtual CFO Stack</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --coal: #1a1a1a;
+    --graphite: #2d2d2d;
+    --slate: #3d3d3d;
+    --amber: #E87722;
+    --amber-light: #f0952f;
+    --amber-pale: #fdf3e8;
+    --gold: #9a6200;
+    --gold-dark: #5c3a00;
+    --cream: #fafaf8;
+    --mist: #f4f4f2;
+    --border: #e8e6e0;
+    --text-primary: #1a1a1a;
+    --text-secondary: #6b6b6b;
+    --text-muted: #a8a8a8;
+    --green: #2a7a4b;
+    --green-bg: #edf7f1;
+    --red: #c0392b;
+    --red-bg: #fdf0ee;
+    --blue: #1a4d8f;
+    --blue-bg: #eef3fb;
+    --shadow-sm: 0 1px 4px rgba(0,0,0,0.06);
+    --shadow-md: 0 4px 16px rgba(0,0,0,0.08);
+    --shadow-lg: 0 12px 40px rgba(0,0,0,0.12);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--mist);
+    color: var(--text-primary);
+    min-height: 100vh;
+  }
+
+  /* ── HEADER ── */
+  .header {
+    background: #000000;
+    padding: 0 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 64px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.5);
+  }
+
+  .header-logo img {
+    height: 42px;
+    opacity: 1;
+  }
+
+  .header-label {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--amber);
+  }
+
+  .header-actions {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+  }
+
+  .btn-primary {
+    background: var(--amber);
+    color: #fff;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 4px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    letter-spacing: 0.02em;
+    transition: background 0.2s;
+  }
+  .btn-primary:hover { background: var(--amber-light); }
+
+  .btn-ghost {
+    background: transparent;
+    color: rgba(255,255,255,0.7);
+    border: 1px solid rgba(255,255,255,0.2);
+    padding: 7px 18px;
+    border-radius: 4px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-ghost:hover { border-color: var(--amber); color: var(--amber); }
+
+  /* ── NAV TABS ── */
+  .nav-tabs {
+    background: var(--graphite);
+    display: flex;
+    padding: 0 40px;
+    gap: 2px;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .nav-tabs::-webkit-scrollbar { display: none; }
+
+  .nav-tab {
+    padding: 14px 22px;
+    font-size: 12.5px;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    color: rgba(255,255,255,0.5);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+  .nav-tab:hover { color: rgba(255,255,255,0.8); }
+  .nav-tab.active {
+    color: var(--amber);
+    border-bottom-color: var(--amber);
+  }
+
+  /* ── MAIN LAYOUT ── */
+  .main { padding: 32px 40px 60px; max-width: 1400px; margin: 0 auto; }
+
+  /* ── PANELS ── */
+  .panel { display: none; }
+  .panel.active { display: block; animation: fadeIn 0.3s ease; }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* ── PAGE HEADER ── */
+  .page-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    margin-bottom: 28px;
+  }
+
+  .page-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--coal);
+    line-height: 1.2;
+  }
+
+  .page-subtitle {
+    font-size: 13.5px;
+    color: var(--text-secondary);
+    margin-top: 4px;
+    font-weight: 400;
+  }
+
+  .period-badge {
+    background: var(--amber-pale);
+    border: 1px solid #f0c080;
+    color: var(--gold-dark);
+    font-size: 12px;
+    font-weight: 600;
+    padding: 5px 14px;
+    border-radius: 20px;
+    letter-spacing: 0.06em;
+  }
+
+  /* ── KPI ROW ── */
+  .kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 28px;
+  }
+
+  .kpi-card {
+    background: #fff;
+    border-radius: 8px;
+    padding: 22px 24px;
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-sm);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .kpi-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: var(--amber);
+  }
+
+  .kpi-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 10px;
+  }
+
+  .kpi-value {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--coal);
+    line-height: 1;
+  }
+
+  .kpi-sub {
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin-top: 6px;
+  }
+
+  .kpi-badge {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 3px;
+    margin-top: 4px;
+  }
+  .badge-up { background: var(--green-bg); color: var(--green); }
+  .badge-down { background: var(--red-bg); color: var(--red); }
+  .badge-neutral { background: var(--blue-bg); color: var(--blue); }
+
+  /* ── TWO COLUMN ── */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
+  .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; margin-bottom: 20px; }
+  .wide-narrow { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; margin-bottom: 20px; }
+
+  /* ── CARD ── */
+  .card {
+    background: #fff;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;
+  }
+
+  .card-header {
+    padding: 18px 24px 14px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .card-title {
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    color: var(--coal);
+    text-transform: uppercase;
+  }
+
+  .card-badge {
+    font-size: 10.5px;
+    font-weight: 600;
+    color: var(--text-muted);
+    letter-spacing: 0.06em;
+  }
+
+  .card-body { padding: 20px 24px; }
+
+  /* ── INPUT GRID ── */
+  .input-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+
+  .input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .input-group label {
+    font-size: 11.5px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .input-group input, .input-group select {
+    background: var(--mist);
+    border: 1.5px solid var(--border);
+    border-radius: 5px;
+    padding: 9px 13px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    color: var(--coal);
+    transition: border-color 0.2s;
+    outline: none;
+    width: 100%;
+  }
+
+  .input-group input:focus, .input-group select:focus {
+    border-color: var(--amber);
+    background: #fff;
+  }
+
+  .input-prefix {
+    position: relative;
+  }
+  .input-prefix span {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 13px;
+    color: var(--text-secondary);
+    pointer-events: none;
+  }
+  .input-prefix input { padding-left: 26px; }
+
+  /* ── DIVIDER ── */
+  .divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 18px 0;
+  }
+
+  /* ── TABLE ── */
+  .data-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .data-table th {
+    text-align: left;
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    padding: 8px 12px;
+    border-bottom: 2px solid var(--border);
+  }
+  .data-table td {
+    padding: 10px 12px;
+    border-bottom: 1px solid #f0eeea;
+    color: var(--text-primary);
+    vertical-align: middle;
+  }
+  .data-table tr:last-child td { border-bottom: none; }
+  .data-table tr:hover td { background: #fafaf6; }
+  .data-table .total-row td {
+    font-weight: 700;
+    background: var(--mist);
+    color: var(--coal);
+    border-top: 2px solid var(--border);
+  }
+  .td-right { text-align: right; font-variant-numeric: tabular-nums; }
+  .td-center { text-align: center; }
+
+  /* ── CHART BARS ── */
+  .mini-bar-wrap { display: flex; align-items: center; gap: 8px; }
+  .mini-bar-bg {
+    flex: 1;
+    height: 6px;
+    background: var(--mist);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .mini-bar-fill {
+    height: 100%;
+    border-radius: 3px;
+    background: var(--amber);
+    transition: width 0.6s ease;
+  }
+  .mini-bar-pct { font-size: 11px; color: var(--text-muted); width: 36px; text-align: right; }
+
+  /* ── MONTH BAR CHART ── */
+  .bar-chart-wrap { padding: 8px 0 4px; }
+  .bar-chart {
+    display: flex;
+    align-items: flex-end;
+    gap: 6px;
+    height: 140px;
+  }
+  .bar-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    height: 100%;
+    justify-content: flex-end;
+  }
+  .bar-fill {
+    width: 100%;
+    border-radius: 3px 3px 0 0;
+    transition: height 0.6s cubic-bezier(.34,1.56,.64,1);
+    min-height: 4px;
+    position: relative;
+  }
+  .bar-fill.income { background: var(--amber); }
+  .bar-fill.expense { background: #c0c0b8; }
+  .bar-label { font-size: 10px; color: var(--text-muted); margin-top: 4px; }
+
+  /* ── DONUT LEGEND ── */
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 5px 0;
+    font-size: 13px;
+  }
+  .legend-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .legend-name { flex: 1; color: var(--text-primary); }
+  .legend-val { font-weight: 600; font-variant-numeric: tabular-nums; color: var(--coal); }
+  .legend-pct { font-size: 11px; color: var(--text-muted); width: 36px; text-align: right; }
+
+  /* ── CALC RESULT BOX ── */
+  .result-box {
+    background: var(--coal);
+    border-radius: 8px;
+    padding: 20px 24px;
+    color: #fff;
+    margin-top: 6px;
+  }
+  .result-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    font-size: 13.5px;
+  }
+  .result-row:last-child { border-bottom: none; }
+  .result-row .r-label { color: rgba(255,255,255,0.65); }
+  .result-row .r-val { font-weight: 600; font-variant-numeric: tabular-nums; }
+  .result-row.highlight .r-val { color: var(--amber-light); font-size: 16px; }
+  .result-row.highlight .r-label { color: rgba(255,255,255,0.85); font-weight: 500; }
+
+  /* ── INSIGHT BOX ── */
+  .insight-box {
+    background: linear-gradient(135deg, var(--amber-pale) 0%, #fff7ee 100%);
+    border-left: 3px solid var(--amber);
+    border-radius: 0 6px 6px 0;
+    padding: 14px 18px;
+    font-size: 13px;
+    color: var(--gold-dark);
+    line-height: 1.6;
+    margin-top: 10px;
+  }
+
+  /* ── SECTION LABEL ── */
+  .section-label {
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 12px;
+  }
+
+  /* ── REPORT PREVIEW ── */
+  #report-preview {
+    display: none;
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 50px 60px;
+    max-width: 860px;
+    margin: 0 auto;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  .report-title-block {
+    border-bottom: 2px solid var(--coal);
+    padding-bottom: 20px;
+    margin-bottom: 32px;
+  }
+
+  .report-kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin: 24px 0;
+  }
+
+  .report-kpi {
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 14px 16px;
+    text-align: center;
+  }
+
+  .report-section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--coal);
+    margin: 28px 0 14px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .print-table { width: 100%; border-collapse: collapse; font-size: 12px; margin-bottom: 16px; }
+  .print-table th {
+    background: var(--coal);
+    color: #fff;
+    padding: 8px 12px;
+    text-align: left;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .print-table td {
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--border);
+    font-size: 12.5px;
+  }
+  .print-table tr:nth-child(even) td { background: #fafaf8; }
+
+  /* ── CALC SECTION STYLES ── */
+  .calc-section {
+    background: #fff;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    overflow: hidden;
+    margin-bottom: 20px;
+  }
+
+  .calc-section-header {
+    background: var(--coal);
+    padding: 14px 24px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .calc-section-header h3 {
+    color: #fff;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .calc-section-header .icon {
+    width: 24px;
+    height: 24px;
+    background: var(--amber);
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+  }
+
+  .calc-body { padding: 22px 24px; }
+
+  .full-width { grid-column: 1 / -1; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    .main { padding: 20px; }
+    .kpi-grid { grid-template-columns: 1fr 1fr; }
+    .two-col, .three-col, .wide-narrow { grid-template-columns: 1fr; }
+    .header { padding: 0 20px; }
+    .nav-tabs { padding: 0 20px; }
+  }
+
+  @media print {
+    body { background: #fff; }
+    .header, .nav-tabs, .panel:not(#panel-report) { display: none !important; }
+    #panel-report { display: block !important; }
+    #report-preview { display: block !important; border: none; padding: 0; }
+    .btn-primary, .btn-ghost { display: none; }
+    .page-header { margin-bottom: 0; }
+  }
+
+  /* TOOLTIP */
+  .tooltip-wrap { position: relative; display: inline-block; }
+  .tooltip-wrap .tip {
+    display: none;
+    position: absolute;
+    bottom: 120%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--coal);
+    color: #fff;
+    font-size: 11px;
+    padding: 5px 10px;
+    border-radius: 4px;
+    white-space: nowrap;
+    z-index: 999;
+  }
+  .tooltip-wrap:hover .tip { display: block; }
+
+  .be-section-label {
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--coal);
+    margin: 16px 0 8px;
+    padding-bottom: 5px;
+    border-bottom: 1.5px solid var(--border);
+  }
+  .be-section-label:first-of-type { margin-top: 0; }
+
+  /* ── FORM ACTIONS ── */
+  .form-actions { display: flex; gap: 10px; margin-top: 20px; }
+
+  /* TAG */
+  .tag {
+    display: inline-block;
+    font-size: 10.5px;
+    font-weight: 600;
+    padding: 2px 9px;
+    border-radius: 3px;
+    letter-spacing: 0.04em;
+  }
+  .tag-amber { background: var(--amber-pale); color: var(--gold-dark); }
+  .tag-green { background: var(--green-bg); color: var(--green); }
+  .tag-red   { background: var(--red-bg); color: var(--red); }
+  .tag-blue  { background: var(--blue-bg); color: var(--blue); }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="header-logo">
+    <img src="data:image/png;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gHYSUNDX1BST0ZJTEUAAQEAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADb/2wBDAAUDBAQEAwUEBAQFBQUGBwwIBwcHBw8LCwkMEQ8SEhEPERETFhwXExQaFRERGCEYGh0dHx8fExciJCIeJBweHx7/2wBDAQUFBQcGBw4ICA4eFBEUHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh7/wAARCAGMBjADASIAAhEBAxEB/8QAHAABAAIDAQEBAAAAAAAAAAAAAAcIAQUGBAID/8QAVhABAAEDAgEGBgsMCAQFBAMAAAECAwQFBhEHEiExQWEIE1FxgbMXIjY3cnR1kaGxshQjMjNCUlVWkpPB0TVigpSiwtLTFlNUcxUYROHwJENj8YOjw//EABsBAQACAwEBAAAAAAAAAAAAAAAEBQIDBgcB/8QAPBEBAAIBAgIGBwYFBAIDAAAAAAECAwQRBTEGEiEyQXE0UWGBkbHBExQzctHwFSI1oeEWIySyQvFSU2L/2gAMAwEAAhEDEQA/AKZAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA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AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD//Z" alt="Orientum" />
+  </div>
+  <span class="header-label">Virtual CFO Stack</span>
+  <div class="header-actions">
+    <button class="btn-primary" onclick="window.print()">Export PDF</button>
+  </div>
+</header>
+
+<!-- NAV -->
+<nav class="nav-tabs">
+  <div class="nav-tab active" onclick="switchPanel('panel-overview', this)">Revenue Overview</div>
+  <div class="nav-tab" onclick="switchPanel('panel-budget', this)">Monthly Budget</div>
+  <div class="nav-tab" onclick="switchPanel('panel-calc', this)">Detailed Calculations</div>
+  <div class="nav-tab" onclick="switchPanel('panel-report', this)">Report Generator</div>
+</nav>
+
+<!-- ═══════════════════════════════════════════════
+     PANEL 1: REVENUE OVERVIEW
+═══════════════════════════════════════════════ -->
+<main class="main">
+
+<div id="panel-overview" class="panel active">
+  <div class="page-header">
+    <div>
+      <div class="page-title">Revenue Overview</div>
+      <div class="page-subtitle">BCG-style financial performance dashboard</div>
+    </div>
+    <span class="period-badge">FY 2025–26</span>
+  </div>
+
+  <!-- KPI ROW -->
+  <div class="kpi-grid">
+    <div class="kpi-card">
+      <div class="kpi-label">Annual Revenue</div>
+      <div class="kpi-value" id="kpi-revenue">$520,000</div>
+      <div class="kpi-sub">Gross before HST</div>
+      <div class="kpi-badge badge-up" id="kpi-rev-badge">▲ On Target</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Net Revenue</div>
+      <div class="kpi-value" id="kpi-net-rev">$460,178</div>
+      <div class="kpi-sub">After HST remittance</div>
+      <div class="kpi-badge badge-neutral" id="kpi-net-badge">HST Quick Method</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Monthly Run Rate</div>
+      <div class="kpi-value" id="kpi-monthly">$43,333</div>
+      <div class="kpi-sub">Average per month</div>
+      <div class="kpi-badge badge-up">Stable</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">HST Remittance</div>
+      <div class="kpi-value" id="kpi-hst">$51,709</div>
+      <div class="kpi-sub">Quick method payable</div>
+      <div class="kpi-badge badge-down" id="kpi-hst-badge">Quarterly</div>
+    </div>
+  </div>
+
+  <!-- INPUTS + CHART -->
+  <div class="wide-narrow">
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">Revenue Configuration</span>
+        <span class="card-badge">Live Inputs</span>
+      </div>
+      <div class="card-body">
+        <div class="input-grid">
+          <div class="input-group">
+            <label>Revenue Per Period ($)</label>
+            <div class="input-prefix"><span>$</span><input type="number" id="rev-per-period" value="10000" onchange="calcRevenue()"/></div>
+          </div>
+          <div class="input-group">
+            <label>Number of Periods</label>
+            <input type="number" id="num-periods" value="52" onchange="calcRevenue()"/>
+          </div>
+          <div class="input-group">
+            <label>Period Type</label>
+            <select id="period-type" onchange="calcRevenue()">
+              <option value="52">Weekly (52)</option>
+              <option value="26">Bi-Weekly (26)</option>
+              <option value="12" selected>Monthly (12)</option>
+              <option value="4">Quarterly (4)</option>
+              <option value="1">Annual (1)</option>
+            </select>
+          </div>
+          <div class="input-group">
+            <label>HST Rate (%)</label>
+            <input type="number" id="hst-rate" value="13" step="0.5" onchange="calcRevenue()"/>
+          </div>
+          <div class="input-group">
+            <label>Quick Method Rate (%)</label>
+            <input type="number" id="quick-rate" value="8.8" step="0.1" onchange="calcRevenue()"/>
+          </div>
+          <div class="input-group">
+            <label>Fiscal Year Start</label>
+            <input type="month" id="fiscal-start" value="2025-05" onchange="calcRevenue()"/>
+          </div>
+        </div>
+        <div class="divider"></div>
+        <div class="result-box">
+          <div class="result-row"><span class="r-label">Gross Revenue (excl. HST)</span><span class="r-val" id="r-gross">$520,000</span></div>
+          <div class="result-row"><span class="r-label">HST Collected</span><span class="r-val" id="r-hst-col">$67,600</span></div>
+          <div class="result-row"><span class="r-label">Total Including HST</span><span class="r-val" id="r-total">$587,600</span></div>
+          <div class="result-row"><span class="r-label">HST Remittable (Quick)</span><span class="r-val" id="r-hst-rem">$51,709</span></div>
+          <div class="result-row highlight"><span class="r-label">💰 Net to Corporation</span><span class="r-val" id="r-net">$468,291</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">Revenue Mix</span>
+        <span class="card-badge">Breakdown</span>
+      </div>
+      <div class="card-body">
+        <p class="section-label">By Revenue Category</p>
+        <div id="rev-categories">
+          <!-- Dynamically filled -->
+        </div>
+        <div class="divider"></div>
+        <p class="section-label">Add Revenue Stream</p>
+        <div class="input-grid">
+          <div class="input-group">
+            <label>Category</label>
+            <input type="text" id="cat-name" placeholder="e.g. Consulting"/>
+          </div>
+          <div class="input-group">
+            <label>Monthly ($)</label>
+            <div class="input-prefix"><span>$</span><input type="number" id="cat-amount" placeholder="5000"/></div>
+          </div>
+        </div>
+        <button class="btn-primary" style="margin-top:12px;width:100%" onclick="addCategory()">+ Add Stream</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MONTHLY CHART -->
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">Monthly Revenue Projection</span>
+      <span class="card-badge">12-Month View</span>
+    </div>
+    <div class="card-body">
+      <div class="bar-chart-wrap">
+        <div class="bar-chart" id="monthly-chart"></div>
+        <div style="display:flex;gap:16px;margin-top:12px;font-size:11.5px;color:var(--text-secondary)">
+          <span style="display:flex;align-items:center;gap:5px"><span style="width:10px;height:10px;background:var(--amber);border-radius:2px;display:inline-block"></span>Revenue</span>
+          <span style="display:flex;align-items:center;gap:5px"><span style="width:10px;height:10px;background:#c0c0b8;border-radius:2px;display:inline-block"></span>Expenses</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     PANEL 2: MONTHLY BUDGET SUMMARY
+═══════════════════════════════════════════════ -->
+<div id="panel-budget" class="panel">
+  <div class="page-header">
+    <div>
+      <div class="page-title">Monthly Budget Summary</div>
+      <div class="page-subtitle">Income, housing, business & personal expenditure</div>
+    </div>
+    <span class="period-badge">Monthly View</span>
+  </div>
+
+  <div class="kpi-grid">
+    <div class="kpi-card">
+      <div class="kpi-label">Total Income</div>
+      <div class="kpi-value" id="b-income">$43,333</div>
+      <div class="kpi-sub">All sources combined</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Total Expenses</div>
+      <div class="kpi-value" id="b-expense">$0</div>
+      <div class="kpi-sub">All categories</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Net Balance</div>
+      <div class="kpi-value" id="b-balance">$43,333</div>
+      <div class="kpi-sub">Income − Expenses</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Expense Ratio</div>
+      <div class="kpi-value" id="b-ratio">0.0%</div>
+      <div class="kpi-sub">Expenses / Income</div>
+    </div>
+  </div>
+
+  <!-- ROW 1: INCOME + HOUSING -->
+  <div class="two-col">
+    <!-- INCOME -->
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">Income Sources</span>
+        <span class="card-badge">Monthly</span>
+      </div>
+      <div class="card-body">
+        <div class="input-grid">
+          <div class="input-group">
+            <label>Business Income ($)</label>
+            <div class="input-prefix"><span>$</span><input type="number" id="inc-business" value="43333" onchange="calcBudget()"/></div>
+          </div>
+          <div class="input-group">
+            <label>Employment Income ($)</label>
+            <div class="input-prefix"><span>$</span><input type="number" id="inc-employment" value="0" onchange="calcBudget()"/></div>
+          </div>
+          <div class="input-group">
+            <label>Investment Income ($)</label>
+            <div class="input-prefix"><span>$</span><input type="number" id="inc-investment" value="0" onchange="calcBudget()"/></div>
+          </div>
+          <div class="input-group">
+            <label>Rental Income ($)</label>
+            <div class="input-prefix"><span>$</span><input type="number" id="inc-rental" value="0" onchange="calcBudget()"/></div>
+          </div>
+          <div class="input-group">
+            <label>Custom Category ($)</label>
+            <div class="input-prefix"><span>$</span><input type="number" id="inc-custom" value="0" onchange="calcBudget()"/></div>
+          </div>
+          <div class="input-group">
+            <label>Other Income ($)</label>
+            <div class="input-prefix"><span>$</span><input type="number" id="inc-other" value="0" onchange="calcBudget()"/></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- HOUSING -->
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">Housing Costs</span>
+        <span class="card-badge">Monthly</span>
+      </div>
+      <div class="card-body">
+        <div class="input-grid">
+          <div class="input-group">
+            <label>Rent / Mortgage ($)</label>
+            <div class="input-prefix"><span>$</span><input type="number" id="h-mortgage" value="0" onchange="calcBudget()"/></div>
+          </div>
+          <div class="input-group">
+            <label>Electricity ($)</label>
+            <div class="input-prefix"><span>$</span><input type="number" id="h-electricity" value="0" onchange="calcBudget()"/></div>
+          </div>
+          <div class="input-group">
+            <label>Water ($)</label>
+            <div class="input-prefix"><span>$</span><input type="number" id="h-water" value="0" onchange="calcBudget()"/></div>
+          </div>
+          <div class="input-group">
+            <label>Waste Removal ($)</label>
+            <div class="input-prefix"><span>$</span><input type="number" id="h-waste" value="0" onchange="calcBudget()"/></div>
+          </div>
+          <div class="input-group">
+            <label>Heating / Cooling ($)</label>
+            <div class="input-prefix"><span>$</span><input type="number" id="h-heating" value="0" onchange="calcBudget()"/></div>
+          </div>
+          <div class="input-group">
+            <label>Property Insurance ($)</label>
+            <div class="input-prefix"><span>$</span><input type="number" id="h-insurance" value="0" onchange="calcBudget()"/></div>
+          </div>
+          <div class="input-group">
+            <label>Property Taxes ($)</label>
+            <div class="input-prefix"><span>$</span><input type="number" id="h-tax" value="0" onchange="calcBudget()"/></div>
+          </div>
+          <div class="input-group">
+            <label>Condo Fees ($)</label>
+            <div class="input-prefix"><span>$</span><input type="number" id="h-condo" value="0" onchange="calcBudget()"/></div>
+          </div>
+          <div class="input-group">
+            <label>Parking ($)</label>
+            <div class="input-prefix"><span>$</span><input type="number" id="h-parking" value="0" onchange="calcBudget()"/></div>
+          </div>
+          <div class="input-group">
+            <label>Repairs ($)</label>
+            <div class="input-prefix"><span>$</span><input type="number" id="h-repairs" value="0" onchange="calcBudget()"/></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ROW 2: MEDICAL + PETS -->
+  <div class="two-col">
+      <!-- MEDICAL EXPENSES -->
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">Medical Expenses</span>
+          <span class="card-badge">Monthly</span>
+        </div>
+        <div class="card-body">
+          <div class="input-grid">
+            <div class="input-group">
+              <label>Prescriptions ($)</label>
+              <div class="input-prefix"><span>$</span><input type="number" id="me-prescriptions" value="0" onchange="calcBudget()"/></div>
+            </div>
+            <div class="input-group">
+              <label>Medical Insurance ($)</label>
+              <div class="input-prefix"><span>$</span><input type="number" id="me-insurance" value="0" onchange="calcBudget()"/></div>
+            </div>
+            <div class="input-group">
+              <label>Dental ($)</label>
+              <div class="input-prefix"><span>$</span><input type="number" id="me-dental" value="0" onchange="calcBudget()"/></div>
+            </div>
+            <div class="input-group">
+              <label>Other Medical ($)</label>
+              <div class="input-prefix"><span>$</span><input type="number" id="me-other" value="0" onchange="calcBudget()"/></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PETS -->
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">Pets</span>
+          <span class="card-badge">Monthly</span>
+        </div>
+        <div class="card-body">
+          <div class="input-grid">
+            <div class="input-group">
+              <label>Pet Food ($)</label>
+              <div class="input-prefix"><span>$</span><input type="number" id="pet-food" value="0" onchange="calcBudget()"/></div>
+            </div>
+            <div class="input-group">
+              <label>Veterinary Care ($)</label>
+              <div class="input-prefix"><span>$</span><input type="number" id="pet-vet" value="0" onchange="calcBudget()"/></div>
+            </div>
+            <div class="input-group">
+              <label>Pet Insurance ($)</label>
+              <div class="input-prefix"><span>$</span><input type="number" id="pet-insurance" value="0" onchange="calcBudget()"/></div>
+            </div>
+            <div class="input-group">
+              <label>Grooming / Walking ($)</label>
+              <div class="input-prefix"><span>$</span><input type="number" id="pet-grooming" value="0" onchange="calcBudget()"/></div>
+            </div>
+          </div>
+        </div>
+      </div>
+  </div>
+
+  <!-- ROW 3: FAMILY + TRANSPORT + DISCRETIONARY + FINANCIAL -->
+  <div class="two-col">
+    <!-- FAMILY EXPENSES -->
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">Family Expenses</span>
+        <span class="card-badge">Monthly</span>
+      </div>
+      <div class="card-body">
+        <div class="input-grid">
+          <div class="input-group">
+            <label>Child / Spousal Support ($)</label>
+            <div class="input-prefix"><span>$</span><input type="number" id="fam-support" value="0" onchange="calcBudget()"/></div>
+          </div>
+          <div class="input-group">
+            <label>Extracurricular ($)</label>
+            <div class="input-prefix"><span>$</span><input type="number" id="fam-extra" value="0" onchange="calcBudget()"/></div>
+          </div>
+          <div class="input-group">
+            <label>Tuition Fees ($)</label>
+            <div class="input-prefix"><span>$</span><input type="number" id="fam-tuition" value="0" onchange="calcBudget()"/></div>
+          </div>
+          <div class="input-group">
+            <label>Daycare / Babysitting ($)</label>
+            <div class="input-prefix"><span>$</span><input type="number" id="fam-daycare" value="0" onchange="calcBudget()"/></div>
+          </div>
+          <div class="input-group">
+            <label>Tutoring ($)</label>
+            <div class="input-prefix"><span>$</span><input type="number" id="fam-tutoring" value="0" onchange="calcBudget()"/></div>
+          </div>
+          <div class="input-group">
+            <label>Other Family ($)</label>
+            <div class="input-prefix"><span>$</span><input type="number" id="fam-other" value="0" onchange="calcBudget()"/></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TRANSPORTATION -->
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">Transportation</span>
+        <span class="card-badge">Monthly</span>
+      </div>
+      <div class="card-body">
+        <div class="input-grid">
+          <div class="input-group">
+            <label>Public Transit ($)</label>
+            <div class="input-prefix"><span>$</span><input type="number" id="tr-transit" value="0" onchange="calcBudget()"/></div>
+          </div>
+          <div class="input-group">
+            <label>Ridesharing (Uber/Lyft) ($)</label>
+            <div class="input-prefix"><span>$</span><input type="number" id="tr-rideshare" value="0" onchange="calcBudget()"/></div>
+          </div>
+          <div class="input-group">
+            <label>Car Insurance ($)</label>
+            <div class="input-prefix"><span>$</span><input type="number" id="tr-car-ins" value="0" onchange="calcBudget()"/></div>
+          </div>
+          <div class="input-group">
+            <label>Gas / Electricity ($)</label>
+            <div class="input-prefix"><span>$</span><input type="number" id="tr-gas" value="0" onchange="calcBudget()"/></div>
+          </div>
+          <div class="input-group">
+            <label>Car Maintenance ($)</label>
+            <div class="input-prefix"><span>$</span><input type="number" id="tr-maintenance" value="0" onchange="calcBudget()"/></div>
+          </div>
+          <div class="input-group">
+            <label>Car Instalments ($)</label>
+            <div class="input-prefix"><span>$</span><input type="number" id="tr-instalments" value="0" onchange="calcBudget()"/></div>
+          </div>
+          <div class="input-group">
+            <label>Roadside Assistance ($)</label>
+            <div class="input-prefix"><span>$</span><input type="number" id="tr-roadside" value="0" onchange="calcBudget()"/></div>
+          </div>
+          <div class="input-group">
+            <label>Other Transport ($)</label>
+            <div class="input-prefix"><span>$</span><input type="number" id="tr-other" value="0" onchange="calcBudget()"/></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ROW 4: DISCRETIONARY + FINANCIAL -->
+  <div class="two-col">
+    <!-- DISCRETIONARY -->
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">Discretionary</span>
+        <span class="card-badge">Monthly</span>
+      </div>
+      <div class="card-body">
+        <div class="input-grid">
+          <div class="input-group">
+            <label>Internet / WiFi ($)</label>
+            <div class="input-prefix"><span>$</span><input type="number" id="disc-internet" value="0" onchange="calcBudget()"/></div>
+          </div>
+          <div class="input-group">
+            <label>Cell Phone ($)</label>
+            <div class="input-prefix"><span>$</span><input type="number" id="disc-cell" value="0" onchange="calcBudget()"/></div>
+          </div>
+          <div class="input-group">
+            <label>Cable / Streaming ($)</label>
+            <div class="input-prefix"><span>$</span><input type="number" id="disc-streaming" value="0" onchange="calcBudget()"/></div>
+          </div>
+          <div class="input-group">
+            <label>Clothes ($)</label>
+            <div class="input-prefix"><span>$</span><input type="number" id="disc-clothes" value="0" onchange="calcBudget()"/></div>
+          </div>
+          <div class="input-group">
+            <label>Entertainment ($)</label>
+            <div class="input-prefix"><span>$</span><input type="number" id="disc-entertainment" value="0" onchange="calcBudget()"/></div>
+          </div>
+          <div class="input-group">
+            <label>Dining ($)</label>
+            <div class="input-prefix"><span>$</span><input type="number" id="disc-dining" value="0" onchange="calcBudget()"/></div>
+          </div>
+          <div class="input-group">
+            <label>Groceries ($)</label>
+            <div class="input-prefix"><span>$</span><input type="number" id="disc-groceries" value="0" onchange="calcBudget()"/></div>
+          </div>
+          <div class="input-group">
+            <label>Activities / Gym ($)</label>
+            <div class="input-prefix"><span>$</span><input type="number" id="disc-activities" value="0" onchange="calcBudget()"/></div>
+          </div>
+          <div class="input-group">
+            <label>Gifts ($)</label>
+            <div class="input-prefix"><span>$</span><input type="number" id="disc-gifts" value="0" onchange="calcBudget()"/></div>
+          </div>
+          <div class="input-group">
+            <label>Charitable Donations ($)</label>
+            <div class="input-prefix"><span>$</span><input type="number" id="disc-charity" value="0" onchange="calcBudget()"/></div>
+          </div>
+          <div class="input-group">
+            <label>Personal Care ($)</label>
+            <div class="input-prefix"><span>$</span><input type="number" id="disc-personal-care" value="0" onchange="calcBudget()"/></div>
+          </div>
+          <div class="input-group">
+            <label>Travel ($)</label>
+            <div class="input-prefix"><span>$</span><input type="number" id="disc-travel" value="0" onchange="calcBudget()"/></div>
+          </div>
+          <div class="input-group">
+            <label>Other Discretionary ($)</label>
+            <div class="input-prefix"><span>$</span><input type="number" id="disc-other" value="0" onchange="calcBudget()"/></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:20px">
+      <!-- FINANCIAL -->
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">Financial / Savings</span>
+          <span class="card-badge">Monthly</span>
+        </div>
+        <div class="card-body">
+          <div class="input-grid">
+            <div class="input-group">
+              <label>Total Debt Payments ($)</label>
+              <div class="input-prefix"><span>$</span><input type="number" id="fin-debt" value="0" onchange="calcBudget()"/></div>
+            </div>
+            <div class="input-group">
+              <label>Life Insurance ($)</label>
+              <div class="input-prefix"><span>$</span><input type="number" id="fin-life-ins" value="0" onchange="calcBudget()"/></div>
+            </div>
+            <div class="input-group">
+              <label>Disability / Critical Illness ($)</label>
+              <div class="input-prefix"><span>$</span><input type="number" id="fin-disability" value="0" onchange="calcBudget()"/></div>
+            </div>
+            <div class="input-group">
+              <label>RRSP Contributions ($)</label>
+              <div class="input-prefix"><span>$</span><input type="number" id="fin-rrsp" value="0" onchange="calcBudget()"/></div>
+            </div>
+            <div class="input-group">
+              <label>TFSA Contributions ($)</label>
+              <div class="input-prefix"><span>$</span><input type="number" id="fin-tfsa" value="0" onchange="calcBudget()"/></div>
+            </div>
+            <div class="input-group">
+              <label>RESP Contributions ($)</label>
+              <div class="input-prefix"><span>$</span><input type="number" id="fin-resp" value="0" onchange="calcBudget()"/></div>
+            </div>
+            <div class="input-group">
+              <label>Other Investments ($)</label>
+              <div class="input-prefix"><span>$</span><input type="number" id="fin-investments" value="0" onchange="calcBudget()"/></div>
+            </div>
+            <div class="input-group">
+              <label>Savings / Emergency Fund ($)</label>
+              <div class="input-prefix"><span>$</span><input type="number" id="fin-savings" value="0" onchange="calcBudget()"/></div>
+            </div>
+            <div class="input-group">
+              <label>Tuition ($)</label>
+              <div class="input-prefix"><span>$</span><input type="number" id="fin-tuition" value="0" onchange="calcBudget()"/></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- BUDGET SUMMARY -->
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">Budget Balance</span>
+          <span class="card-badge">Summary</span>
+        </div>
+        <div class="card-body">
+          <table class="data-table">
+            <thead>
+              <tr><th>Category</th><th class="td-right">Amount</th><th class="td-right">% of Income</th></tr>
+            </thead>
+            <tbody id="budget-breakdown">
+              <tr><td>Housing</td><td class="td-right">$0</td><td class="td-right">—</td></tr>
+              <tr><td>Business</td><td class="td-right">$0</td><td class="td-right">—</td></tr>
+              <tr><td>Medical</td><td class="td-right">$0</td><td class="td-right">—</td></tr>
+              <tr><td>Pets</td><td class="td-right">$0</td><td class="td-right">—</td></tr>
+              <tr><td>Family</td><td class="td-right">$0</td><td class="td-right">—</td></tr>
+              <tr><td>Transport</td><td class="td-right">$0</td><td class="td-right">—</td></tr>
+              <tr><td>Discretionary</td><td class="td-right">$0</td><td class="td-right">—</td></tr>
+              <tr><td>Financial / Savings</td><td class="td-right">$0</td><td class="td-right">—</td></tr>
+            </tbody>
+            <tfoot>
+              <tr class="total-row"><td>Net Balance</td><td class="td-right" id="bt-balance">$43,333</td><td class="td-right" id="bt-pct">100%</td></tr>
+            </tfoot>
+          </table>
+          <div class="insight-box" id="budget-insight">
+            💡 <strong>CFO Insight:</strong> Current expense ratio is 0%. Maintaining a healthy surplus. Recommend reviewing RRSP/TFSA contributions and retained earnings strategy.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ROW 5: BUSINESS EXPENSES (full width) -->
+  <div class="card" style="margin-top:4px">
+    <div class="card-header">
+      <span class="card-title">Business Expenses</span>
+      <span class="card-badge">Monthly — auto-carried from personal</span>
+    </div>
+    <div class="card-body">
+      <div style="font-size:11.5px;color:var(--text-secondary);margin-bottom:16px;line-height:1.5;background:var(--amber-pale);border-radius:5px;padding:9px 14px;">
+        💡 Items marked <span style="color:var(--amber);font-weight:600">auto</span> are calculated from your personal/housing inputs using CRA-accepted percentages. You can override any value manually.
+      </div>
+
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:24px">
+
+        <!-- COL 1 -->
+        <div>
+          <div class="be-section-label">🏠 Home Office</div>
+          <div class="input-grid" style="margin-bottom:20px">
+            <div class="input-group">
+              <label>Occupancy Cost <span class="tag tag-amber">7% of Mortgage</span></label>
+              <div class="input-prefix"><span>$</span><input type="number" id="be-occupancy" value="0" onchange="calcBudget()" placeholder="auto"/></div>
+            </div>
+            <div class="input-group">
+              <label>Utilities <span class="tag tag-amber">10% of Housing Utils</span></label>
+              <div class="input-prefix"><span>$</span><input type="number" id="be-utilities" value="0" onchange="calcBudget()" placeholder="auto"/></div>
+            </div>
+            <div class="input-group full-width">
+              <label>External Office / Co-working ($)</label>
+              <div class="input-prefix"><span>$</span><input type="number" id="be-office-rent" value="0" onchange="calcBudget()"/></div>
+            </div>
+          </div>
+
+          <div class="be-section-label">📱 Communications & Tech</div>
+          <div class="input-grid" style="margin-bottom:20px">
+            <div class="input-group">
+              <label>Internet / WiFi <span class="tag tag-amber">100%</span></label>
+              <div class="input-prefix"><span>$</span><input type="number" id="be-internet" value="0" onchange="calcBudget()" placeholder="auto"/></div>
+            </div>
+            <div class="input-group">
+              <label>Cell Phone <span class="tag tag-amber">100%</span></label>
+              <div class="input-prefix"><span>$</span><input type="number" id="be-cell" value="0" onchange="calcBudget()" placeholder="auto"/></div>
+            </div>
+            <div class="input-group">
+              <label>Software / Subscriptions <span class="tag tag-amber">100%</span></label>
+              <div class="input-prefix"><span>$</span><input type="number" id="be-software" value="0" onchange="calcBudget()" placeholder="auto"/></div>
+            </div>
+            <div class="input-group">
+              <label>Office Supplies ($)</label>
+              <div class="input-prefix"><span>$</span><input type="number" id="be-supplies" value="0" onchange="calcBudget()"/></div>
+            </div>
+          </div>
+
+          <div class="be-section-label">🚗 Travel & Vehicle</div>
+          <div class="input-grid">
+            <div class="input-group">
+              <label>Travel <span class="tag tag-amber">Travel+Transit+Ride</span></label>
+              <div class="input-prefix"><span>$</span><input type="number" id="be-travel" value="0" onchange="calcBudget()" placeholder="auto"/></div>
+            </div>
+            <div class="input-group">
+              <label>Vehicle Expense <span class="tag tag-amber">Ins+Gas+Maint+Inst</span></label>
+              <div class="input-prefix"><span>$</span><input type="number" id="be-vehicle" value="0" onchange="calcBudget()" placeholder="auto"/></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- COL 2 -->
+        <div>
+          <div class="be-section-label">👥 People & Professional</div>
+          <div class="input-grid" style="margin-bottom:20px">
+            <div class="input-group">
+              <label>Salaries & Wages ($)</label>
+              <div class="input-prefix"><span>$</span><input type="number" id="be-salaries" value="0" onchange="calcBudget()"/></div>
+            </div>
+            <div class="input-group">
+              <label>Subcontractors ($)</label>
+              <div class="input-prefix"><span>$</span><input type="number" id="be-subcontractors" value="0" onchange="calcBudget()"/></div>
+            </div>
+            <div class="input-group">
+              <label>Accounting / Bookkeeping ($)</label>
+              <div class="input-prefix"><span>$</span><input type="number" id="be-accounting" value="0" onchange="calcBudget()"/></div>
+            </div>
+            <div class="input-group">
+              <label>Legal Fees ($)</label>
+              <div class="input-prefix"><span>$</span><input type="number" id="be-legal" value="0" onchange="calcBudget()"/></div>
+            </div>
+            <div class="input-group">
+              <label>Consulting Fees ($)</label>
+              <div class="input-prefix"><span>$</span><input type="number" id="be-consulting" value="0" onchange="calcBudget()"/></div>
+            </div>
+            <div class="input-group">
+              <label>Training & Development ($)</label>
+              <div class="input-prefix"><span>$</span><input type="number" id="be-training" value="0" onchange="calcBudget()"/></div>
+            </div>
+          </div>
+
+          <div class="be-section-label">⚙️ Operations & Compliance</div>
+          <div class="input-grid">
+            <div class="input-group">
+              <label>Business Insurance ($)</label>
+              <div class="input-prefix"><span>$</span><input type="number" id="be-insurance" value="0" onchange="calcBudget()"/></div>
+            </div>
+            <div class="input-group">
+              <label>Dues & Memberships ($)</label>
+              <div class="input-prefix"><span>$</span><input type="number" id="be-memberships" value="0" onchange="calcBudget()"/></div>
+            </div>
+            <div class="input-group">
+              <label>Bank Charges & Interest ($)</label>
+              <div class="input-prefix"><span>$</span><input type="number" id="be-bank" value="0" onchange="calcBudget()"/></div>
+            </div>
+            <div class="input-group">
+              <label>Business Taxes & Licences ($)</label>
+              <div class="input-prefix"><span>$</span><input type="number" id="be-taxes-licences" value="0" onchange="calcBudget()"/></div>
+            </div>
+            <div class="input-group">
+              <label>Bad Debts ($)</label>
+              <div class="input-prefix"><span>$</span><input type="number" id="be-bad-debts" value="0" onchange="calcBudget()"/></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- COL 3 -->
+        <div>
+          <div class="be-section-label">📣 Marketing & Biz Dev</div>
+          <div class="input-grid" style="margin-bottom:20px">
+            <div class="input-group">
+              <label>Advertising & Marketing ($)</label>
+              <div class="input-prefix"><span>$</span><input type="number" id="be-advertising" value="0" onchange="calcBudget()"/></div>
+            </div>
+            <div class="input-group">
+              <label>Entertainment <span class="tag tag-amber">100%</span></label>
+              <div class="input-prefix"><span>$</span><input type="number" id="be-entertainment" value="0" onchange="calcBudget()" placeholder="auto"/></div>
+            </div>
+            <div class="input-group">
+              <label>Dining <span class="tag tag-amber">50%</span></label>
+              <div class="input-prefix"><span>$</span><input type="number" id="be-dining" value="0" onchange="calcBudget()" placeholder="auto"/></div>
+            </div>
+            <div class="input-group">
+              <label>Gifts <span class="tag tag-amber">100%</span></label>
+              <div class="input-prefix"><span>$</span><input type="number" id="be-gifts" value="0" onchange="calcBudget()" placeholder="auto"/></div>
+            </div>
+            <div class="input-group">
+              <label>Charitable Donations <span class="tag tag-amber">100%</span></label>
+              <div class="input-prefix"><span>$</span><input type="number" id="be-charity" value="0" onchange="calcBudget()" placeholder="auto"/></div>
+            </div>
+            <div class="input-group">
+              <label>Uniforms <span class="tag tag-amber">10% of Clothes</span></label>
+              <div class="input-prefix"><span>$</span><input type="number" id="be-uniforms" value="0" onchange="calcBudget()" placeholder="auto"/></div>
+            </div>
+            <div class="input-group">
+              <label>Activities / Gym <span class="tag tag-amber">100%</span></label>
+              <div class="input-prefix"><span>$</span><input type="number" id="be-activities" value="0" onchange="calcBudget()" placeholder="auto"/></div>
+            </div>
+          </div>
+
+          <div class="be-section-label">➕ Other Expenses</div>
+          <div style="background:var(--mist);border-radius:6px;padding:12px 14px">
+            <div style="display:grid;grid-template-columns:90px 1fr 80px 36px;gap:6px;align-items:end;margin-bottom:8px">
+              <div class="input-group" style="margin:0">
+                <label>Amount ($)</label>
+                <div class="input-prefix"><span>$</span><input type="number" id="oe-amount" placeholder="0" style="background:#fff"/></div>
+              </div>
+              <div class="input-group" style="margin:0">
+                <label>Description / Purpose</label>
+                <input type="text" id="oe-desc" placeholder="e.g. Repair of office equipment" style="background:#fff;border:1.5px solid var(--border);border-radius:5px;padding:9px 10px;font-family:'DM Sans',sans-serif;font-size:13px;width:100%;outline:none"/>
+              </div>
+              <div class="input-group" style="margin:0">
+                <label>HST?</label>
+                <select id="oe-hst" style="background:#fff;border:1.5px solid var(--border);border-radius:5px;padding:9px 6px;font-family:'DM Sans',sans-serif;font-size:12px;width:100%;outline:none">
+                  <option value="yes">Yes 13%</option>
+                  <option value="no">No HST</option>
+                  <option value="exempt">Exempt</option>
+                </select>
+              </div>
+              <button onclick="addOtherExpense()" class="btn-primary" style="height:38px;align-self:end;padding:0 10px;font-size:18px;line-height:1">+</button>
+            </div>
+            <table class="data-table" style="background:#fff;border-radius:5px;overflow:hidden;font-size:12px">
+              <thead><tr><th>Amount</th><th>Description</th><th style="text-align:center">HST</th><th style="width:28px"></th></tr></thead>
+              <tbody id="oe-rows"><tr id="oe-empty-row"><td colspan="4" style="text-align:center;color:var(--text-muted);padding:12px;font-size:12px">None added yet</td></tr></tbody>
+              <tfoot><tr class="total-row"><td id="oe-total-amt">$0</td><td>Total</td><td></td><td></td></tr></tfoot>
+            </table>
+          </div>
+        </div>
+
+      </div><!-- end 3-col grid -->
+
+      <div class="divider" style="margin-top:20px"></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px">
+        <div style="display:flex;gap:32px;align-items:center">
+          <div>
+            <div style="font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-muted)">Total Business Expenses</div>
+            <div id="be-total-display" style="font-family:'Playfair Display',serif;font-size:24px;font-weight:700;color:var(--coal)">$0</div>
+          </div>
+          <div>
+            <div style="font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-muted)">Est. HST on Expenses</div>
+            <div id="be-hst-display" style="font-family:'Playfair Display',serif;font-size:24px;font-weight:700;color:var(--amber)">$0</div>
+          </div>
+          <div style="font-size:11px;color:var(--text-muted);max-width:200px;line-height:1.5">↑ HST flows automatically to Regular Method ITC (Line 106)</div>
+        </div>
+        <button class="btn-ghost" style="color:var(--coal);border-color:var(--border);font-size:12px" onclick="autoCarryBusinessExpenses()">🔄 Re-apply Auto-Carry</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     PANEL 3: DETAILED CALCULATIONS
+═══════════════════════════════════════════════ -->
+<div id="panel-calc" class="panel">
+  <div class="page-header">
+    <div>
+      <div class="page-title">Detailed Calculations</div>
+      <div class="page-subtitle">HST Quick Method, Payroll, CPP, and tax planning tools</div>
+    </div>
+    <span class="period-badge">Tax Year 2025</span>
+  </div>
+
+  <!-- HST CALCULATOR -->
+  <div class="calc-section">
+    <div class="calc-section-header">
+      <div class="icon">🧮</div>
+      <h3>HST Calculator</h3>
+      <!-- METHOD TOGGLE (shown only when eligible) -->
+      <div id="hst-method-toggle" style="margin-left:auto;display:flex;align-items:center;gap:8px">
+        <span style="font-size:11.5px;color:rgba(255,255,255,0.6);letter-spacing:0.05em">Method:</span>
+        <div style="display:flex;border:1.5px solid rgba(255,255,255,0.2);border-radius:5px;overflow:hidden">
+          <button id="btn-quick" onclick="setHSTMethod('quick')" style="padding:5px 14px;font-size:12px;font-weight:600;font-family:'DM Sans',sans-serif;border:none;cursor:pointer;background:var(--amber);color:#fff;transition:all 0.15s">Quick</button>
+          <button id="btn-regular" onclick="setHSTMethod('regular')" style="padding:5px 14px;font-size:12px;font-weight:600;font-family:'DM Sans',sans-serif;border:none;cursor:pointer;background:transparent;color:rgba(255,255,255,0.55);transition:all 0.15s">Regular</button>
+        </div>
+      </div>
+    </div>
+    <div class="calc-body">
+
+      <!-- THRESHOLD WARNING (shown above $400K) -->
+      <div id="hst-threshold-warn" style="display:none;background:#fff3cd;border:1.5px solid #e6a817;border-radius:6px;padding:12px 16px;margin-bottom:16px;font-size:13px;color:#7a4f00;line-height:1.55">
+        ⚠️ <strong>Quick Method Not Available:</strong> Gross revenue including HST exceeds the <strong>$400,000 threshold</strong>. Automatically switched to the Regular HST Method — report actual HST collected and claim eligible ITCs on all business expenses.
+      </div>
+
+      <!-- SHARED INPUTS -->
+      <div class="input-grid" style="margin-bottom:16px">
+        <div class="input-group">
+          <label>Gross Sales (incl. HST) ($)</label>
+          <div class="input-prefix"><span>$</span><input type="number" id="hst-gross" value="587600" onchange="calcHST()"/></div>
+        </div>
+        <div class="input-group">
+          <label>HST Rate (%)</label>
+          <input type="number" id="hst-rate2" value="13" step="0.5" onchange="calcHST()"/>
+        </div>
+        <div class="input-group">
+          <label>Filing Frequency</label>
+          <select id="hst-freq" onchange="calcHST()">
+            <option value="annual">Annual</option>
+            <option value="quarterly" selected>Quarterly</option>
+            <option value="monthly">Monthly</option>
+          </select>
+        </div>
+        <div class="input-group">
+          <label>Months Remaining in Year</label>
+          <input type="number" id="hst-months" value="12" min="1" max="12" onchange="calcHST()"/>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+
+        <!-- QUICK METHOD PANEL -->
+        <div id="panel-quick-method">
+          <div style="font-size:10.5px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-muted);margin-bottom:10px">Quick Method Inputs</div>
+          <div class="input-grid" style="margin-bottom:12px">
+            <div class="input-group">
+              <label>Quick Method Rate (%)</label>
+              <input type="number" id="hst-quick" value="8.8" step="0.1" onchange="calcHST()"/>
+            </div>
+            <div class="input-group">
+              <label>ITC Credits – Capital ($)</label>
+              <div class="input-prefix"><span>$</span><input type="number" id="hst-itc" value="300" onchange="calcHST()"/></div>
+            </div>
+          </div>
+          <div class="result-box" id="hst-quick-results">
+            <div class="result-row"><span class="r-label">Line 101 – Gross Revenue</span><span class="r-val" id="hst-r101">—</span></div>
+            <div class="result-row"><span class="r-label">Line 105 – Quick Method Remittance</span><span class="r-val" id="hst-r105">—</span></div>
+            <div class="result-row"><span class="r-label">Line 108 – ITC (Capital only)</span><span class="r-val" id="hst-r108">—</span></div>
+            <div class="result-row"><span class="r-label">Line 109 – Net HST Payable</span><span class="r-val" id="hst-r109">—</span></div>
+            <div class="result-row"><span class="r-label">HST Savings vs. Regular</span><span class="r-val" id="hst-savings" style="color:#6ee7a8">—</span></div>
+            <div class="result-row highlight"><span class="r-label">Per Period Instalment</span><span class="r-val" id="hst-instalment">—</span></div>
+          </div>
+        </div>
+
+        <!-- REGULAR METHOD PANEL -->
+        <div id="panel-regular-method">
+          <div style="font-size:10.5px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-muted);margin-bottom:10px">Regular Method Inputs</div>
+          <div class="input-grid" style="margin-bottom:12px">
+            <div class="input-group">
+              <label>Total Business Exp. HST ($) <span style="font-size:10px;color:var(--amber)">← auto from budget</span></label>
+              <div class="input-prefix"><span>$</span><input type="number" id="reg-exp-hst" value="0" onchange="calcHST()"/></div>
+            </div>
+            <div class="input-group">
+              <label>ITC – Capital Assets ($)</label>
+              <div class="input-prefix"><span>$</span><input type="number" id="reg-itc-capital" value="300" onchange="calcHST()"/></div>
+            </div>
+          </div>
+          <div class="result-box" id="hst-regular-results">
+            <div class="result-row"><span class="r-label">Line 101 – Gross Revenue</span><span class="r-val" id="reg-r101">—</span></div>
+            <div class="result-row"><span class="r-label">Line 103 – HST Collected</span><span class="r-val" id="reg-r103">—</span></div>
+            <div class="result-row"><span class="r-label">Line 106 – ITC on Expenses</span><span class="r-val" id="reg-r106">—</span></div>
+            <div class="result-row"><span class="r-label">Line 108 – ITC on Capital</span><span class="r-val" id="reg-r108">—</span></div>
+            <div class="result-row"><span class="r-label">Line 109 – Net HST Payable</span><span class="r-val" id="reg-r109">—</span></div>
+            <div class="result-row highlight"><span class="r-label">Per Period Instalment</span><span class="r-val" id="reg-instalment">—</span></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- PAYROLL / CPP -->
+  <div class="two-col">
+    <div class="calc-section" style="margin-bottom:0">
+      <div class="calc-section-header">
+        <div class="icon">👤</div>
+        <h3>Non-Arm's Length Payroll</h3>
+      </div>
+      <div class="calc-body">
+        <div class="input-grid">
+          <div class="input-group">
+            <label>Gross Sales ($)</label>
+            <div class="input-prefix"><span>$</span><input type="number" id="pr-gross" value="587600" onchange="calcPayroll()"/></div>
+          </div>
+          <div class="input-group">
+            <label>HST (Quick Method) ($)</label>
+            <div class="input-prefix"><span>$</span><input type="number" id="pr-hst" value="51709" onchange="calcPayroll()"/></div>
+          </div>
+          <div class="input-group">
+            <label>Approx. Annual Draw ($)</label>
+            <div class="input-prefix"><span>$</span><input type="number" id="pr-draw" value="0" onchange="calcPayroll()"/></div>
+          </div>
+          <div class="input-group">
+            <label>CPP Rate (%)</label>
+            <input type="number" id="pr-cpp" value="5.95" step="0.01" onchange="calcPayroll()"/>
+          </div>
+          <div class="input-group">
+            <label>Max CPP Contribution ($)</label>
+            <div class="input-prefix"><span>$</span><input type="number" id="pr-max-cpp" value="3867.50" onchange="calcPayroll()"/></div>
+          </div>
+          <div class="input-group">
+            <label>Months Remaining</label>
+            <input type="number" id="pr-months" value="12" min="1" max="12" onchange="calcPayroll()"/>
+          </div>
+        </div>
+        <div class="result-box" style="margin-top:16px">
+          <div class="result-row"><span class="r-label">Net Sales</span><span class="r-val" id="pr-net">$535,891</span></div>
+          <div class="result-row"><span class="r-label">Recommended Payroll (60%)</span><span class="r-val" id="pr-recommended">$321,535</span></div>
+          <div class="result-row"><span class="r-label">Employee CPP</span><span class="r-val" id="pr-emp-cpp">$208</span></div>
+          <div class="result-row"><span class="r-label">Employer CPP</span><span class="r-val" id="pr-er-cpp">$208</span></div>
+          <div class="result-row highlight"><span class="r-label">Monthly CPP Instalment</span><span class="r-val" id="pr-monthly-cpp">$35</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- INCOME TAX ESTIMATOR -->
+    <div class="calc-section" style="margin-bottom:0">
+      <div class="calc-section-header">
+        <div class="icon">💼</div>
+        <h3>Corporate Income Planner</h3>
+      </div>
+      <div class="calc-body">
+        <div class="input-grid">
+          <div class="input-group">
+            <label>Corporate Revenue ($)</label>
+            <div class="input-prefix"><span>$</span><input type="number" id="corp-rev" value="520000" onchange="calcCorp()"/></div>
+          </div>
+          <div class="input-group">
+            <label>Total Expenses ($)</label>
+            <div class="input-prefix"><span>$</span><input type="number" id="corp-exp" value="50000" onchange="calcCorp()"/></div>
+          </div>
+          <div class="input-group">
+            <label>Salary Paid to Owner ($)</label>
+            <div class="input-prefix"><span>$</span><input type="number" id="corp-salary" value="60000" onchange="calcCorp()"/></div>
+          </div>
+          <div class="input-group">
+            <label>Province</label>
+            <select id="corp-province" onchange="calcCorp()">
+              <option value="ON" selected>Ontario</option>
+              <option value="BC">British Columbia</option>
+              <option value="AB">Alberta</option>
+              <option value="QC">Quebec</option>
+            </select>
+          </div>
+          <div class="input-group">
+            <label>Small Biz Deduction Limit ($)</label>
+            <div class="input-prefix"><span>$</span><input type="number" id="corp-sbd" value="500000" onchange="calcCorp()"/></div>
+          </div>
+          <div class="input-group">
+            <label>Dividends Paid ($)</label>
+            <div class="input-prefix"><span>$</span><input type="number" id="corp-div" value="0" onchange="calcCorp()"/></div>
+          </div>
+        </div>
+        <div class="result-box" style="margin-top:16px">
+          <div class="result-row"><span class="r-label">Taxable Corporate Income</span><span class="r-val" id="corp-taxable">$410,000</span></div>
+          <div class="result-row"><span class="r-label">Federal Tax (9% SBD)</span><span class="r-val" id="corp-fed">$36,900</span></div>
+          <div class="result-row"><span class="r-label">Provincial Tax (ON 3.2%)</span><span class="r-val" id="corp-prov">$13,120</span></div>
+          <div class="result-row"><span class="r-label">Total Corporate Tax</span><span class="r-val" id="corp-total-tax">$50,020</span></div>
+          <div class="result-row highlight"><span class="r-label">Retained Earnings</span><span class="r-val" id="corp-retained">$359,980</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ASSET CALCULATOR -->
+  <div class="calc-section" style="margin-top:20px">
+    <div class="calc-section-header">
+      <div class="icon">🏢</div>
+      <h3>Asset Purchase & ITC Calculator</h3>
+    </div>
+    <div class="calc-body">
+      <div style="margin-bottom:14px;font-size:13px;color:var(--text-secondary)">
+        Add business assets to calculate ITC and CCA impact
+      </div>
+      <div class="input-grid" style="margin-bottom:12px">
+        <div class="input-group">
+          <label>Asset Description</label>
+          <input type="text" id="asset-desc" placeholder="e.g. Laptop, Vehicle"/>
+        </div>
+        <div class="input-group">
+          <label>Purchase Price ($)</label>
+          <div class="input-prefix"><span>$</span><input type="number" id="asset-price" placeholder="5000"/></div>
+        </div>
+        <div class="input-group">
+          <label>Asset Type</label>
+          <select id="asset-type">
+            <option value="current">Current Asset</option>
+            <option value="capital">Capital Asset (CCA)</option>
+            <option value="vehicle">Vehicle (Class 10/10.1)</option>
+            <option value="software">Software (Class 12)</option>
+          </select>
+        </div>
+        <div class="input-group">
+          <label>HST Paid ($)</label>
+          <div class="input-prefix"><span>$</span><input type="number" id="asset-hst" placeholder="650"/></div>
+        </div>
+      </div>
+      <button class="btn-primary" onclick="addAsset()">+ Add Asset</button>
+      <div class="divider"></div>
+      <table class="data-table" id="asset-table">
+        <thead>
+          <tr><th>Asset</th><th>Type</th><th class="td-right">Purchase ($)</th><th class="td-right">HST ($)</th><th class="td-right">ITC ($)</th><th class="td-center">Action</th></tr>
+        </thead>
+        <tbody id="asset-rows">
+          <tr><td colspan="6" style="text-align:center;color:var(--text-muted);padding:20px">No assets added yet</td></tr>
+        </tbody>
+        <tfoot>
+          <tr class="total-row">
+            <td colspan="2">Total</td>
+            <td class="td-right" id="asset-total-price">$0</td>
+            <td class="td-right" id="asset-total-hst">$0</td>
+            <td class="td-right" id="asset-total-itc">$0</td>
+            <td></td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     PANEL 4: REPORT GENERATOR
+═══════════════════════════════════════════════ -->
+<div id="panel-report" class="panel">
+  <div class="page-header">
+    <div>
+      <div class="page-title">AI Business Review Report</div>
+      <div class="page-subtitle">AI writes a custom narrative for each section based on your numbers</div>
+    </div>
+    <div style="display:flex;gap:10px;align-items:center">
+      <div id="report-locked-badge" style="display:none;background:var(--green-bg);color:var(--green);border:1px solid #b8e6cc;border-radius:4px;padding:5px 12px;font-size:12px;font-weight:600">🔒 Report Locked</div>
+      <button class="btn-ghost" onclick="unlockReport()" id="btn-unlock" style="display:none;color:var(--coal);border-color:var(--border);font-size:13px">✏️ Edit &amp; Regenerate</button>
+      <button class="btn-ghost" onclick="generateAIReport()" style="color:var(--coal);border-color:var(--border)" id="btn-refresh-report">🤖 Generate AI Report</button>
+      <button class="btn-primary" onclick="window.print()">🖨 Print / Export PDF</button>
+    </div>
+  </div>
+
+  <!-- CLIENT INFO -->
+  <div class="card" style="margin-bottom:20px" id="client-info-card">
+    <div class="card-header">
+      <span class="card-title">Client & Session Details</span>
+      <span class="card-badge">Cover Sheet</span>
+    </div>
+    <div class="card-body">
+      <div class="input-grid">
+        <div class="input-group">
+          <label>Legal Name of Corporation</label>
+          <input type="text" id="rpt-corp-name" placeholder="ABC Holdings Inc."/>
+        </div>
+        <div class="input-group">
+          <label>Business Number (BN)</label>
+          <input type="text" id="rpt-bn" placeholder="123456789 RT 0001"/>
+        </div>
+        <div class="input-group">
+          <label>Operating Name</label>
+          <input type="text" id="rpt-op-name" placeholder="ABC Consulting"/>
+        </div>
+        <div class="input-group">
+          <label>Year End</label>
+          <select id="rpt-yearend" style="background:var(--mist);border:1.5px solid var(--border);border-radius:5px;padding:9px 13px;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--coal);width:100%;outline:none;transition:border-color 0.2s">
+            <option value="Jan 31, 2025">January 31, 2025</option>
+            <option value="Feb 28, 2025">February 28, 2025</option>
+            <option value="Mar 31, 2025">March 31, 2025</option>
+            <option value="Apr 30, 2025">April 30, 2025</option>
+            <option value="May 31, 2025">May 31, 2025</option>
+            <option value="Jun 30, 2025">June 30, 2025</option>
+            <option value="Jul 31, 2025">July 31, 2025</option>
+            <option value="Aug 31, 2025">August 31, 2025</option>
+            <option value="Sep 30, 2025">September 30, 2025</option>
+            <option value="Oct 31, 2025">October 31, 2025</option>
+            <option value="Nov 30, 2025">November 30, 2025</option>
+            <option value="Dec 31, 2025" selected>December 31, 2025</option>
+            <option value="Jan 31, 2026">January 31, 2026</option>
+            <option value="Feb 28, 2026">February 28, 2026</option>
+            <option value="Mar 31, 2026">March 31, 2026</option>
+            <option value="Apr 30, 2026">April 30, 2026</option>
+            <option value="May 31, 2026">May 31, 2026</option>
+            <option value="Jun 30, 2026">June 30, 2026</option>
+            <option value="Jul 31, 2026">July 31, 2026</option>
+            <option value="Aug 31, 2026">August 31, 2026</option>
+            <option value="Sep 30, 2026">September 30, 2026</option>
+            <option value="Oct 31, 2026">October 31, 2026</option>
+            <option value="Nov 30, 2026">November 30, 2026</option>
+            <option value="Dec 31, 2026">December 31, 2026</option>
+            <option value="Jan 31, 2027">January 31, 2027</option>
+            <option value="Feb 28, 2027">February 28, 2027</option>
+            <option value="Mar 31, 2027">March 31, 2027</option>
+            <option value="Apr 30, 2027">April 30, 2027</option>
+            <option value="May 31, 2027">May 31, 2027</option>
+            <option value="Jun 30, 2027">June 30, 2027</option>
+            <option value="Jul 31, 2027">July 31, 2027</option>
+            <option value="Aug 31, 2027">August 31, 2027</option>
+            <option value="Sep 30, 2027">September 30, 2027</option>
+            <option value="Oct 31, 2027">October 31, 2027</option>
+            <option value="Nov 30, 2027">November 30, 2027</option>
+            <option value="Dec 31, 2027">December 31, 2027</option>
+          </select>
+        </div>
+        <div class="input-group">
+          <label>Meeting Date</label>
+          <input type="date" id="rpt-meeting" value="2025-06-01"/>
+        </div>
+        <div class="input-group">
+          <label>Prepared By</label>
+          <input type="text" id="rpt-preparer" placeholder="Orientum Advisory"/>
+        </div>
+        <div class="input-group">
+          <label>Industry / Business Type</label>
+          <input type="text" id="rpt-industry" placeholder="e.g. IT Consulting, Real Estate, Healthcare"/>
+        </div>
+        <div class="input-group">
+          <label>Key Notes for AI (optional)</label>
+          <input type="text" id="rpt-notes" placeholder="e.g. planning to hire, new property purchase, expansion..."/>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- AI STATUS BAR -->
+  <div id="ai-status-bar" style="display:none;background:var(--coal);border-radius:8px;padding:16px 24px;margin-bottom:20px;display:none;align-items:center;gap:14px">
+    <div id="ai-spinner" style="width:20px;height:20px;border:2.5px solid rgba(255,255,255,0.2);border-top-color:var(--amber);border-radius:50%;animation:spin 0.8s linear infinite;flex-shrink:0"></div>
+    <div>
+      <div style="color:#fff;font-size:13px;font-weight:600" id="ai-status-text">Initializing AI analysis...</div>
+      <div style="color:rgba(255,255,255,0.5);font-size:11.5px;margin-top:2px" id="ai-status-sub">Claude is reviewing your financial data</div>
+    </div>
+  </div>
+
+  <!-- GENERATED REPORT -->
+  <div id="report-preview" style="display:none"><!-- Filled by JS --></div>
+
+  <!-- LOCKED OVERLAY (shown when report is generated) -->
+  <div id="report-locked-overlay" style="display:none;background:var(--mist);border:1.5px dashed var(--border);border-radius:8px;padding:20px 24px;margin-bottom:16px;display:none;align-items:center;justify-content:space-between;gap:16px">
+    <div style="display:flex;align-items:center;gap:12px">
+      <span style="font-size:22px">🔒</span>
+      <div>
+        <div style="font-size:13.5px;font-weight:600;color:var(--coal)">Report is locked — no further API calls will be made</div>
+        <div style="font-size:12px;color:var(--text-secondary);margin-top:2px">Generated on <span id="report-generated-time">—</span>. Click <strong>Edit &amp; Regenerate</strong> to update with new data.</div>
+      </div>
+    </div>
+    <div style="font-size:12px;color:var(--green);font-weight:600;background:var(--green-bg);padding:5px 12px;border-radius:4px;white-space:nowrap">✓ Saved this session</div>
+  </div>
+
+  <div id="report-placeholder" style="text-align:center;padding:70px 40px;color:var(--text-muted)">
+    <div style="font-size:48px;margin-bottom:16px">🤖</div>
+    <div style="font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:var(--coal);margin-bottom:8px">AI-Powered Business Review</div>
+    <div style="font-size:13.5px;max-width:480px;margin:0 auto;line-height:1.7;color:var(--text-secondary)">Fill in the client details above, then click <strong>Generate AI Report</strong>. Claude will write a custom narrative for each section — executive summary, revenue analysis, budget insights, HST strategy, and CFO recommendations. <strong>Generated once and locked</strong> — no repeat charges.</div>
+    <button class="btn-primary" style="margin-top:24px;padding:12px 28px;font-size:14px" onclick="generateAIReport()">🤖 Generate AI Report</button>
+  </div>
+</div>
+
+</main>
+
+<!-- ═══════════════════════════════════════════
+     JAVASCRIPT
+═══════════════════════════════════════════ -->
+<script>
+// ── STATE ──
+const revenueCategories = [
+  { name: 'Professional Fees', amount: 30000, color: '#E87722' },
+  { name: 'Consulting', amount: 8000, color: '#9a6200' },
+  { name: 'Advisory Retainer', amount: 5333, color: '#5c3a00' }
+];
+
+const assets = [];
+
+// ── UTILS ──
+const fmt = (n) => '$' + Number(n || 0).toLocaleString('en-CA', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+const pct = (n) => (n || 0).toFixed(1) + '%';
+const num = (id) => parseFloat(document.getElementById(id)?.value || 0) || 0;
+const set = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
+
+// ── PANEL SWITCHING ──
+function switchPanel(id, tabEl) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  const panel = document.getElementById(id);
+  if (panel) panel.classList.add('active');
+  if (tabEl) tabEl.classList.add('active');
+  else {
+    const tabs = document.querySelectorAll('.nav-tab');
+    const panels = ['panel-overview','panel-budget','panel-calc','panel-report'];
+    const idx = panels.indexOf(id);
+    if (idx >= 0) tabs[idx]?.classList.add('active');
+  }
+}
+
+// ── REVENUE CALCS ──
+function calcRevenue() {
+  const perPeriod = num('rev-per-period');
+  const periods   = num('num-periods') || parseInt(document.getElementById('period-type')?.value) || 52;
+  const hstRate   = num('hst-rate') / 100;
+  const quickRate = num('quick-rate') / 100;
+
+  const gross    = perPeriod * periods;
+  const hstColl  = gross * hstRate;
+  const total    = gross + hstColl;
+  const hstRem   = total * quickRate;
+  const net      = gross - hstRem + hstColl; // net to corp = gross + HST collected − HST remitted
+
+  set('kpi-revenue', fmt(gross));
+  set('kpi-net-rev', fmt(gross - hstRem));
+  set('kpi-monthly', fmt(gross / 12));
+  set('kpi-hst', fmt(hstRem));
+  set('r-gross', fmt(gross));
+  set('r-hst-col', fmt(hstColl));
+  set('r-total', fmt(total));
+  set('r-hst-rem', fmt(hstRem));
+  set('r-net', fmt(gross + hstColl - hstRem));
+
+  // Sync to HST calc
+  document.getElementById('hst-gross').value = Math.round(total);
+  document.getElementById('hst-rate2').value = (hstRate * 100).toFixed(1);
+
+  buildMonthlyChart(gross / 12);
+  calcHST();
+}
+
+function buildMonthlyChart(monthlyRev) {
+  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const chart = document.getElementById('monthly-chart');
+  if (!chart) return;
+  const expBase = monthlyRev * 0.35;
+  chart.innerHTML = '';
+  months.forEach((m, i) => {
+    const rev = monthlyRev * (0.85 + Math.random() * 0.3);
+    const exp = expBase * (0.7 + Math.random() * 0.5);
+    const maxH = 120;
+    const rH = Math.round((rev / (monthlyRev * 1.3)) * maxH);
+    const eH = Math.round((exp / (monthlyRev * 1.3)) * maxH);
+    chart.innerHTML += `
+      <div class="bar-item">
+        <div style="display:flex;gap:2px;align-items:flex-end;flex:1">
+          <div class="bar-fill income" style="height:${rH}px;flex:1"></div>
+          <div class="bar-fill expense" style="height:${eH}px;flex:1"></div>
+        </div>
+        <div class="bar-label">${m}</div>
+      </div>`;
+  });
+}
+
+// ── REVENUE CATEGORIES ──
+function addCategory() {
+  const name = document.getElementById('cat-name').value.trim();
+  const amount = parseFloat(document.getElementById('cat-amount').value) || 0;
+  if (!name || !amount) return;
+  const colors = ['#E87722','#9a6200','#5c3a00','#c0392b','#1a4d8f','#2a7a4b'];
+  revenueCategories.push({ name, amount, color: colors[revenueCategories.length % colors.length] });
+  document.getElementById('cat-name').value = '';
+  document.getElementById('cat-amount').value = '';
+  renderCategories();
+}
+
+function renderCategories() {
+  const el = document.getElementById('rev-categories');
+  if (!el) return;
+  const total = revenueCategories.reduce((s, c) => s + c.amount, 0);
+  el.innerHTML = revenueCategories.map(c => `
+    <div class="legend-item">
+      <div class="legend-dot" style="background:${c.color}"></div>
+      <div class="legend-name">${c.name}</div>
+      <div class="mini-bar-wrap" style="flex:1;max-width:90px">
+        <div class="mini-bar-bg"><div class="mini-bar-fill" style="width:${Math.round((c.amount/total)*100)}%;background:${c.color}"></div></div>
+      </div>
+      <div class="legend-val">${fmt(c.amount)}</div>
+      <div class="legend-pct">${pct((c.amount/total)*100)}</div>
+    </div>`).join('');
+}
+
+// ── BUDGET ──
+function calcBudget() {
+  // Auto-carry business expenses from personal inputs first
+  autoCarryBusinessExpenses();
+
+  const inc = num('inc-business') + num('inc-employment') + num('inc-investment') + num('inc-rental') + num('inc-custom') + num('inc-other');
+
+  const housing = num('h-mortgage') + num('h-electricity') + num('h-water') + num('h-waste') + num('h-heating') + num('h-insurance') + num('h-tax') + num('h-condo') + num('h-parking') + num('h-repairs');
+
+  const business = num('be-occupancy') + num('be-utilities') + num('be-office-rent') +
+                   num('be-internet') + num('be-cell') + num('be-software') + num('be-supplies') +
+                   num('be-salaries') + num('be-subcontractors') + num('be-accounting') + num('be-legal') + num('be-consulting') + num('be-training') +
+                   num('be-advertising') + num('be-entertainment') + num('be-dining') + num('be-gifts') + num('be-charity') +
+                   num('be-insurance') + num('be-memberships') + num('be-bank') + num('be-taxes-licences') + num('be-bad-debts') + num('be-uniforms') + num('be-activities') +
+                   num('be-travel') + num('be-vehicle') +
+                   getOtherExpensesTotal();
+
+  const medical = num('me-prescriptions') + num('me-insurance') + num('me-dental') + num('me-other');
+
+  const pets = num('pet-food') + num('pet-vet') + num('pet-insurance') + num('pet-grooming');
+
+  const family = num('fam-support') + num('fam-extra') + num('fam-tuition') + num('fam-daycare') + num('fam-tutoring') + num('fam-other');
+
+  const transport = num('tr-transit') + num('tr-rideshare') + num('tr-car-ins') + num('tr-gas') + num('tr-maintenance') + num('tr-instalments') + num('tr-roadside') + num('tr-other');
+
+  const discretionary = num('disc-internet') + num('disc-cell') + num('disc-streaming') + num('disc-clothes') + num('disc-entertainment') + num('disc-dining') + num('disc-groceries') + num('disc-activities') + num('disc-gifts') + num('disc-charity') + num('disc-personal-care') + num('disc-travel') + num('disc-other');
+
+  const financial = num('fin-debt') + num('fin-life-ins') + num('fin-disability') + num('fin-rrsp') + num('fin-tfsa') + num('fin-resp') + num('fin-investments') + num('fin-savings') + num('fin-tuition');
+
+  const totalExp = housing + business + medical + pets + family + transport + discretionary + financial;
+  const balance = inc - totalExp;
+  const ratio = inc > 0 ? (totalExp / inc) * 100 : 0;
+  const p = (v) => inc > 0 ? pct((v/inc)*100) : '—';
+
+  set('b-income', fmt(inc));
+  set('b-expense', fmt(totalExp));
+  set('b-balance', fmt(balance));
+  set('b-ratio', pct(ratio));
+  set('bt-balance', fmt(balance));
+  set('bt-pct', pct(100 - ratio));
+
+  // Update business expense total + HST display
+  const beHST = calcBusinessExpenseHST();
+  set('be-total-display', fmt(business));
+  set('be-hst-display', fmt(beHST));
+  // Push into regular method ITC field
+  const regField = document.getElementById('reg-exp-hst');
+  if (regField) regField.value = beHST.toFixed(2);
+
+  const tbody = document.getElementById('budget-breakdown');
+  if (tbody) {
+    tbody.innerHTML = `
+      <tr><td>Housing</td><td class="td-right">${fmt(housing)}</td><td class="td-right">${p(housing)}</td></tr>
+      <tr><td>Business</td><td class="td-right">${fmt(business)}</td><td class="td-right">${p(business)}</td></tr>
+      <tr><td>Medical</td><td class="td-right">${fmt(medical)}</td><td class="td-right">${p(medical)}</td></tr>
+      <tr><td>Pets</td><td class="td-right">${fmt(pets)}</td><td class="td-right">${p(pets)}</td></tr>
+      <tr><td>Family</td><td class="td-right">${fmt(family)}</td><td class="td-right">${p(family)}</td></tr>
+      <tr><td>Transport</td><td class="td-right">${fmt(transport)}</td><td class="td-right">${p(transport)}</td></tr>
+      <tr><td>Discretionary</td><td class="td-right">${fmt(discretionary)}</td><td class="td-right">${p(discretionary)}</td></tr>
+      <tr><td>Financial / Savings</td><td class="td-right">${fmt(financial)}</td><td class="td-right">${p(financial)}</td></tr>
+    `;
+  }
+
+  const insight = document.getElementById('budget-insight');
+  if (insight) {
+    let msg = '';
+    if (ratio > 80) msg = '⚠️ <strong>CFO Alert:</strong> Expense ratio above 80%. Immediate cost review recommended.';
+    else if (ratio > 50) msg = '📊 <strong>CFO Insight:</strong> Expense ratio is moderate. Consider optimizing business costs for better retained earnings.';
+    else if (ratio > 20) msg = '✅ <strong>CFO Insight:</strong> Healthy expense ratio. Review RRSP/TFSA room and corporate bonus timing for optimal tax positioning.';
+    else msg = '💰 <strong>CFO Insight:</strong> Excellent surplus. Consider retained earnings strategy, dividends, TFSA/RRSP contributions, or capital investments.';
+    insight.innerHTML = msg;
+  }
+
+}
+
+// ── HST METHOD STATE ──
+let hstMethod = 'quick'; // 'quick' | 'regular'
+
+function setHSTMethod(m) {
+  hstMethod = m;
+  const btnQ = document.getElementById('btn-quick');
+  const btnR = document.getElementById('btn-regular');
+  const pQ   = document.getElementById('panel-quick-method');
+  const pR   = document.getElementById('panel-regular-method');
+  if (m === 'quick') {
+    if (btnQ) { btnQ.style.background = 'var(--amber)'; btnQ.style.color = '#fff'; }
+    if (btnR) { btnR.style.background = 'transparent'; btnR.style.color = 'rgba(255,255,255,0.55)'; }
+    if (pQ) pQ.style.opacity = '1';
+    if (pR) pR.style.opacity = '0.45';
+  } else {
+    if (btnR) { btnR.style.background = 'var(--amber)'; btnR.style.color = '#fff'; }
+    if (btnQ) { btnQ.style.background = 'transparent'; btnQ.style.color = 'rgba(255,255,255,0.55)'; }
+    if (pR) pR.style.opacity = '1';
+    if (pQ) pQ.style.opacity = '0.45';
+  }
+  calcHST();
+}
+
+// ── HST ──
+function calcHST() {
+  const gross   = num('hst-gross');
+  const hstRate = num('hst-rate2') / 100;
+  const freq    = document.getElementById('hst-freq')?.value || 'quarterly';
+  const periodsMap = { annual: 1, quarterly: 4, monthly: 12 };
+  const periods = periodsMap[freq] || 4;
+
+  const THRESHOLD = 400000;
+  const warn    = document.getElementById('hst-threshold-warn');
+  const toggle  = document.getElementById('hst-method-toggle');
+  const badge   = document.getElementById('kpi-net-badge');
+
+  // HST actually collected (for regular method)
+  const hstCollected = gross * hstRate / (1 + hstRate); // extracts HST from gross-incl
+
+  // Business expense HST — flows from budget
+  const beHST = calcBusinessExpenseHST();
+  if (gross > THRESHOLD) {
+    if (warn)   warn.style.display = 'block';
+    if (toggle) toggle.style.display = 'none'; // hide toggle
+    if (hstMethod !== 'regular') {
+      hstMethod = 'regular';
+      // Update button visuals without recursive call
+      const btnQ = document.getElementById('btn-quick');
+      const btnR = document.getElementById('btn-regular');
+      const pQ   = document.getElementById('panel-quick-method');
+      const pR   = document.getElementById('panel-regular-method');
+      if (btnR) { btnR.style.background = 'var(--amber)'; btnR.style.color = '#fff'; }
+      if (btnQ) { btnQ.style.background = 'transparent'; btnQ.style.color = 'rgba(255,255,255,0.55)'; }
+      if (pR) pR.style.opacity = '1';
+      if (pQ) pQ.style.opacity = '0.45';
+    }
+    if (badge) { badge.textContent = '⚠️ Regular Method (>$400K)'; badge.className = 'kpi-badge badge-down'; }
+  } else {
+    if (warn)   warn.style.display = 'none';
+    if (toggle) toggle.style.display = 'flex';
+    if (badge) {
+      badge.textContent = hstMethod === 'quick' ? 'HST Quick Method' : 'HST Regular Method';
+      badge.className = 'kpi-badge badge-neutral';
+    }
+  }
+
+  // ── QUICK METHOD ──
+  const quickR    = num('hst-quick') / 100;
+  const itcCap    = num('hst-itc');
+  const qLine101  = gross;
+  const qLine105  = gross * quickR;
+  const qLine108  = itcCap;
+  const qLine109  = qLine105 - qLine108;
+  const qInst     = qLine109 / periods;
+  const qSavings  = hstCollected - qLine109; // how much you keep vs regular
+
+  set('hst-r101', fmt(qLine101));
+  set('hst-r105', fmt(qLine105));
+  set('hst-r108', fmt(qLine108));
+  set('hst-r109', fmt(qLine109));
+  set('hst-savings', qSavings >= 0 ? '+' + fmt(qSavings) : fmt(qSavings));
+  set('hst-instalment', fmt(qInst));
+
+  // ── REGULAR METHOD ──
+  const regExpHST  = num('reg-exp-hst') || beHST;
+  const regCapITC  = num('reg-itc-capital');
+  const rLine101   = gross;
+  const rLine103   = hstCollected;             // HST actually collected
+  const rLine106   = regExpHST;                // ITC on operating expenses
+  const rLine108   = regCapITC;                // ITC on capital
+  const rLine109   = rLine103 - rLine106 - rLine108;
+  const rInst      = Math.max(0, rLine109) / periods;
+
+  set('reg-r101', fmt(rLine101));
+  set('reg-r103', fmt(rLine103));
+  set('reg-r106', fmt(rLine106));
+  set('reg-r108', fmt(rLine108));
+  set('reg-r109', fmt(rLine109));
+  set('reg-instalment', fmt(rInst));
+
+  // Sync reg-exp-hst field with auto-calculated value (only if user hasn't overridden)
+  const regField = document.getElementById('reg-exp-hst');
+  if (regField && parseFloat(regField.value) === 0 && beHST > 0) {
+    regField.value = beHST.toFixed(2);
+  }
+
+  // KPI sync — use active method
+  const activeNet = hstMethod === 'quick' ? qLine109 : rLine109;
+  set('kpi-hst', fmt(activeNet));
+}
+
+// ── AUTO-CARRY BUSINESS EXPENSES ──
+function autoCarryBusinessExpenses() {
+  // Exact Excel formulas:
+  // Occupancy = 7% × mortgage
+  const mortgage = num('h-mortgage');
+  const housingUtils = num('h-electricity') + num('h-water') + num('h-waste') + num('h-heating') +
+                       num('h-insurance') + num('h-tax') + num('h-condo') + num('h-parking') + num('h-repairs');
+
+  setVal('be-occupancy',    round2(mortgage * 0.07));
+  setVal('be-utilities',    round2(housingUtils * 0.10));
+  setVal('be-internet',     num('disc-internet'));                    // 100%
+  setVal('be-cell',         num('disc-cell'));                        // 100%
+  setVal('be-software',     num('disc-streaming'));                   // 100%
+  setVal('be-uniforms',     round2(num('disc-clothes') * 0.10));     // 10%
+  setVal('be-entertainment',num('disc-entertainment'));               // 100%
+  setVal('be-dining',       round2(num('disc-dining') * 0.50));      // 50%
+  setVal('be-activities',   num('disc-activities'));                  // 100%
+  setVal('be-gifts',        num('disc-gifts'));                       // 100%
+  setVal('be-charity',      num('disc-charity'));                     // 100%
+  // Travel = disc travel + public transit + rideshare
+  setVal('be-travel',       num('disc-travel') + num('tr-transit') + num('tr-rideshare'));
+  // Vehicle = car ins + gas + maintenance + instalments + roadside
+  setVal('be-vehicle',      num('tr-car-ins') + num('tr-gas') + num('tr-maintenance') + num('tr-instalments') + num('tr-roadside'));
+}
+
+function round2(v) { return Math.round(v * 100) / 100; }
+function setVal(id, v) { const el = document.getElementById(id); if (el) el.value = v || 0; }
+
+// Returns estimated HST on total business expenses
+function calcBusinessExpenseHST() {
+  const hstRate = num('hst-rate2') / 100 || 0.13;
+  // Fixed-rate fields (all subject to HST unless wages/salaries)
+  const taxableFixed = num('be-occupancy') + num('be-utilities') + num('be-office-rent') +
+    num('be-internet') + num('be-cell') + num('be-software') + num('be-supplies') +
+    num('be-subcontractors') + num('be-accounting') + num('be-legal') + num('be-consulting') + num('be-training') +
+    num('be-advertising') + num('be-entertainment') + num('be-dining') + num('be-gifts') +
+    num('be-insurance') + num('be-memberships') + num('be-bank') + num('be-taxes-licences') +
+    num('be-uniforms') + num('be-activities') + num('be-travel') + num('be-vehicle');
+  // Salaries/wages & charitable donations & bad debts are NOT subject to HST
+  // Other expenses — use HST flag from calculator
+  const otherHST = getOtherExpensesHST(hstRate);
+  return round2(taxableFixed * hstRate + otherHST);
+}
+
+// ── OTHER EXPENSES CALCULATOR ──
+const otherExpenses = [];
+
+function addOtherExpense() {
+  const amount = parseFloat(document.getElementById('oe-amount')?.value) || 0;
+  const desc   = document.getElementById('oe-desc')?.value.trim();
+  const hstOpt = document.getElementById('oe-hst')?.value || 'yes';
+  if (!amount || !desc) {
+    // Flash the empty field
+    ['oe-amount','oe-desc'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el && !el.value) { el.style.borderColor = 'var(--red)'; setTimeout(() => el.style.borderColor = '', 1500); }
+    });
+    return;
+  }
+  otherExpenses.push({ amount, desc, hstOpt, id: Date.now() });
+  document.getElementById('oe-amount').value = '';
+  document.getElementById('oe-desc').value = '';
+  renderOtherExpenses();
+  calcBudget();
+}
+
+function removeOtherExpense(id) {
+  const idx = otherExpenses.findIndex(e => e.id === id);
+  if (idx >= 0) otherExpenses.splice(idx, 1);
+  renderOtherExpenses();
+  calcBudget();
+}
+
+function renderOtherExpenses() {
+  const tbody = document.getElementById('oe-rows');
+  if (!tbody) return;
+  const hstRate = num('hst-rate2') / 100 || 0.13;
+
+  if (!otherExpenses.length) {
+    tbody.innerHTML = '<tr id="oe-empty-row"><td colspan="5" style="text-align:center;color:var(--text-muted);padding:16px;font-size:12.5px">No custom expenses added yet</td></tr>';
+    set('oe-total-amt', '$0');
+    set('oe-total-hst', '$0');
+    return;
+  }
+
+  const hstLabels = { yes: '13%', no: '—', exempt: 'Exempt' };
+  tbody.innerHTML = otherExpenses.map(e => {
+    const hstAmt = e.hstOpt === 'yes' ? e.amount * hstRate : 0;
+    return `<tr>
+      <td style="font-variant-numeric:tabular-nums;font-weight:600">${fmt(e.amount)}</td>
+      <td style="font-size:12.5px;color:var(--text-primary)">${e.desc}</td>
+      <td style="text-align:center"><span class="tag ${e.hstOpt === 'yes' ? 'tag-amber' : 'tag-blue'}">${hstLabels[e.hstOpt]}</span></td>
+      <td class="td-right" style="font-variant-numeric:tabular-nums">${hstAmt > 0 ? fmt(hstAmt) : '—'}</td>
+      <td style="text-align:center"><button onclick="removeOtherExpense(${e.id})" style="background:none;border:none;color:var(--red);cursor:pointer;font-size:14px;padding:2px 6px">✕</button></td>
+    </tr>`;
+  }).join('');
+
+  const totalAmt = otherExpenses.reduce((s, e) => s + e.amount, 0);
+  const totalHST = getOtherExpensesHST(hstRate);
+  set('oe-total-amt', fmt(totalAmt));
+  set('oe-total-hst', fmt(totalHST));
+}
+
+function getOtherExpensesTotal() {
+  return otherExpenses.reduce((s, e) => s + e.amount, 0);
+}
+
+function getOtherExpensesHST(hstRate) {
+  return round2(otherExpenses.filter(e => e.hstOpt === 'yes').reduce((s, e) => s + e.amount * hstRate, 0));
+}
+
+// ── PAYROLL ──
+function calcPayroll() {
+  const gross   = num('pr-gross');
+  const hst     = num('pr-hst');
+  const draw    = num('pr-draw');
+  const cppRate = num('pr-cpp') / 100;
+  const maxCPP  = num('pr-max-cpp');
+  const months  = num('pr-months') || 12;
+
+  const net = gross - hst;
+  const recommended = net * 0.60;
+
+  const cppBase = Math.max(0, (draw || recommended) - 3500);
+  const empCPP  = Math.min(cppBase * cppRate, maxCPP);
+  const erCPP   = empCPP;
+  const monthly = (empCPP + erCPP) / months;
+
+  set('pr-net', fmt(net));
+  set('pr-recommended', fmt(recommended));
+  set('pr-emp-cpp', fmt(empCPP));
+  set('pr-er-cpp', fmt(erCPP));
+  set('pr-monthly-cpp', fmt(monthly));
+}
+
+// ── CORPORATE TAX ──
+function calcCorp() {
+  const rev     = num('corp-rev');
+  const exp     = num('corp-exp');
+  const salary  = num('corp-salary');
+  const sbd     = num('corp-sbd');
+  const divs    = num('corp-div');
+  const prov    = document.getElementById('corp-province')?.value || 'ON';
+
+  const provRates = { ON: 0.032, BC: 0.02, AB: 0.02, QC: 0.038 };
+  const provRate  = provRates[prov] || 0.032;
+  const fedRate   = 0.09; // SBD
+
+  const taxable   = Math.max(0, rev - exp - salary - divs);
+  const sbdAmount = Math.min(taxable, sbd);
+  const fedTax    = sbdAmount * fedRate;
+  const provTax   = sbdAmount * provRate;
+  const totalTax  = fedTax + provTax;
+  const retained  = taxable - totalTax;
+
+  set('corp-taxable', fmt(taxable));
+  set('corp-fed', fmt(fedTax));
+  set('corp-prov', `${fmt(provTax)} (${prov} ${pct(provRate*100)})`);
+  set('corp-total-tax', fmt(totalTax));
+  set('corp-retained', fmt(retained));
+}
+
+// ── ASSETS ──
+function addAsset() {
+  const desc  = document.getElementById('asset-desc').value.trim();
+  const price = parseFloat(document.getElementById('asset-price').value) || 0;
+  const type  = document.getElementById('asset-type').value;
+  const hst   = parseFloat(document.getElementById('asset-hst').value) || 0;
+
+  if (!desc || !price) return;
+
+  assets.push({ desc, price, type, hst, itc: hst }); // ITC = HST paid on capital
+  document.getElementById('asset-desc').value = '';
+  document.getElementById('asset-price').value = '';
+  document.getElementById('asset-hst').value = '';
+  renderAssets();
+}
+
+function removeAsset(idx) {
+  assets.splice(idx, 1);
+  renderAssets();
+}
+
+function renderAssets() {
+  const tbody = document.getElementById('asset-rows');
+  if (!tbody) return;
+  if (!assets.length) {
+    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:var(--text-muted);padding:20px">No assets added yet</td></tr>';
+    set('asset-total-price', '$0');
+    set('asset-total-hst', '$0');
+    set('asset-total-itc', '$0');
+    return;
+  }
+  const labels = { current: 'Current', capital: 'Capital (CCA)', vehicle: 'Vehicle', software: 'Software' };
+  tbody.innerHTML = assets.map((a, i) => `
+    <tr>
+      <td>${a.desc}</td>
+      <td><span class="tag tag-amber">${labels[a.type]}</span></td>
+      <td class="td-right">${fmt(a.price)}</td>
+      <td class="td-right">${fmt(a.hst)}</td>
+      <td class="td-right">${fmt(a.itc)}</td>
+      <td class="td-center"><button onclick="removeAsset(${i})" style="background:none;border:none;color:var(--red);cursor:pointer;font-size:14px">✕</button></td>
+    </tr>`).join('');
+  const totPrice = assets.reduce((s, a) => s + a.price, 0);
+  const totHST   = assets.reduce((s, a) => s + a.hst, 0);
+  const totITC   = assets.reduce((s, a) => s + a.itc, 0);
+  set('asset-total-price', fmt(totPrice));
+  set('asset-total-hst', fmt(totHST));
+  set('asset-total-itc', fmt(totITC));
+}
+
+// ── REPORT STATE ──
+let reportLocked = false;
+let lockedReportHTML = '';
+
+document.addEventListener('DOMContentLoaded', () => {
+  const oeDesc = document.getElementById('oe-desc');
+  if (oeDesc) oeDesc.addEventListener('keydown', e => { if (e.key === 'Enter') addOtherExpense(); });
+});
+
+function unlockReport() {
+  reportLocked = false;
+  lockedReportHTML = '';
+  const overlay = document.getElementById('report-locked-overlay');
+  const preview = document.getElementById('report-preview');
+  const placeholder = document.getElementById('report-placeholder');
+  const badge = document.getElementById('report-locked-badge');
+  const btnUnlock = document.getElementById('btn-unlock');
+  const btnGen = document.getElementById('btn-refresh-report');
+  const infoCard = document.getElementById('client-info-card');
+  if (overlay)   { overlay.style.display = 'none'; }
+  if (preview)   { preview.style.display = 'none'; preview.innerHTML = ''; }
+  if (placeholder){ placeholder.style.display = 'block'; }
+  if (badge)     badge.style.display = 'none';
+  if (btnUnlock) btnUnlock.style.display = 'none';
+  if (btnGen)    btnGen.style.display = 'inline-block';
+  if (infoCard)  infoCard.style.opacity = '1';
+}
+
+async function generateAIReport() {
+  // ── PROXY — calls Netlify function which holds the API key server-side ──
+  const PROXY_URL = '/.netlify/functions/claude-proxy';
+  const corpName = document.getElementById('rpt-corp-name')?.value || 'the corporation';
+  const bn       = document.getElementById('rpt-bn')?.value || '—';
+  const opName   = document.getElementById('rpt-op-name')?.value || '';
+  const yearEnd  = document.getElementById('rpt-yearend')?.value || '2025-12';
+  const meeting  = document.getElementById('rpt-meeting')?.value || '';
+  const preparer = document.getElementById('rpt-preparer')?.value || 'Orientum Advisory';
+  const industry = document.getElementById('rpt-industry')?.value || 'professional services';
+  const notes    = document.getElementById('rpt-notes')?.value || '';
+  const today    = new Date().toLocaleDateString('en-CA', { year:'numeric', month:'long', day:'numeric' });
+  const timeNow  = new Date().toLocaleTimeString('en-CA', { hour:'2-digit', minute:'2-digit' });
+
+  const d = collectFinancialData();
+  const ratio = d.totalInc > 0 ? ((d.totalExp/d.totalInc)*100).toFixed(1) : '0';
+  const hstMethodLabel = hstMethod === 'quick' ? 'Quick Method' : 'Regular Method';
+
+  const statusBar  = document.getElementById('ai-status-bar');
+  const statusText = document.getElementById('ai-status-text');
+  const statusSub  = document.getElementById('ai-status-sub');
+  const placeholder = document.getElementById('report-placeholder');
+  const preview    = document.getElementById('report-preview');
+  const overlay    = document.getElementById('report-locked-overlay');
+  const badge      = document.getElementById('report-locked-badge');
+  const btnUnlock  = document.getElementById('btn-unlock');
+  const btnGen     = document.getElementById('btn-refresh-report');
+  const infoCard   = document.getElementById('client-info-card');
+
+  statusBar.style.display = 'flex';
+  placeholder.style.display = 'none';
+  preview.style.display = 'none';
+  if (overlay) overlay.style.display = 'none';
+  preview.innerHTML = '';
+
+  const financialContext = `
+CLIENT: ${corpName}${opName ? ' (operating as ' + opName + ')' : ''}
+INDUSTRY: ${industry}
+YEAR END: ${yearEnd}
+PREPARED BY: ${preparer}
+MEETING DATE: ${meeting || today}
+ADVISOR NOTES: ${notes || 'None'}
+
+REVENUE:
+- Annual Gross Revenue: $${Math.round(d.gross).toLocaleString('en-CA')}
+- HST Collected: $${Math.round(d.hstColl).toLocaleString('en-CA')}
+- HST Method: ${hstMethodLabel}
+- HST Remittable: $${Math.round(d.hstPayable).toLocaleString('en-CA')}
+- Net Revenue to Corporation: $${Math.round(d.netRev).toLocaleString('en-CA')}
+- Monthly Run Rate: $${Math.round(d.gross/12).toLocaleString('en-CA')}
+
+MONTHLY BUDGET:
+- Total Income: $${Math.round(d.totalInc).toLocaleString('en-CA')}
+- Housing Costs: $${Math.round(d.housing).toLocaleString('en-CA')}
+- Business Expenses: $${Math.round(d.business).toLocaleString('en-CA')}
+- Medical: $${Math.round(d.medical).toLocaleString('en-CA')}
+- Family: $${Math.round(d.family).toLocaleString('en-CA')}
+- Transportation: $${Math.round(d.transport).toLocaleString('en-CA')}
+- Discretionary: $${Math.round(d.disc).toLocaleString('en-CA')}
+- Financial/Savings: $${Math.round(d.financial).toLocaleString('en-CA')}
+- Total Expenses: $${Math.round(d.totalExp).toLocaleString('en-CA')}
+- Net Monthly Balance: $${Math.round(d.balance).toLocaleString('en-CA')}
+- Expense Ratio: ${ratio}%
+
+CORPORATE TAX ESTIMATE: $${Math.round(d.corpTax).toLocaleString('en-CA')}
+`;
+
+  const sections = [
+    {
+      key: 'executive',
+      label: 'Executive Summary',
+      statusText: 'Writing executive summary...',
+      statusSub: 'Synthesizing overall financial position',
+      prompt: `You are a Virtual CFO at a top accounting and advisory firm (like KPMG or Grant Thornton). Write a 3-paragraph executive summary for the business review meeting with ${corpName}, a ${industry} company. Use the financial data below. Paragraph 1: overall financial health and revenue position. Paragraph 2: budget and expense analysis. Paragraph 3: key strategic priorities for this period. Write in a professional but conversational advisory tone — like a trusted CFO speaking to the business owner. Be specific about the numbers. Do NOT use bullet points. Return only the paragraphs with no headers or labels.\n\nFINANCIAL DATA:\n${financialContext}`
+    },
+    {
+      key: 'revenue',
+      label: 'Revenue Analysis',
+      statusText: 'Analysing revenue streams...',
+      statusSub: 'Reviewing gross revenue and HST position',
+      prompt: `You are a Virtual CFO. Write 2 paragraphs analysing the revenue position of ${corpName} (${industry}). Discuss: (1) the annual gross revenue, monthly run rate, and what this means for the business stage; (2) the HST position using the ${hstMethodLabel} — whether this is appropriate given their revenue level, and any planning considerations. Be specific with the numbers. Professional tone, no bullet points, no headers.\n\nFINANCIAL DATA:\n${financialContext}`
+    },
+    {
+      key: 'budget',
+      label: 'Budget & Expense Insights',
+      statusText: 'Evaluating budget performance...',
+      statusSub: 'Analysing expense ratios and cash flow',
+      prompt: `You are a Virtual CFO. Write 2 paragraphs providing budget and expense insights for ${corpName} (${industry}). Discuss: (1) the overall expense ratio of ${ratio}% and what it says about operational efficiency, highlighting the largest expense categories; (2) the monthly net balance of $${Math.round(d.balance).toLocaleString('en-CA')} and what the owner should be doing with this surplus or how to address a deficit. Be direct and actionable. Professional tone, no bullet points, no headers.\n\nFINANCIAL DATA:\n${financialContext}`
+    },
+    {
+      key: 'hst',
+      label: 'HST & Tax Planning',
+      statusText: 'Preparing HST and tax analysis...',
+      statusSub: 'Reviewing HST method and corporate tax position',
+      prompt: `You are a Virtual CFO specialising in Canadian tax. Write 2 paragraphs on HST and corporate tax planning for ${corpName} (${industry}). Discuss: (1) the HST ${hstMethodLabel} — the annual HST remittance of $${Math.round(d.hstPayable).toLocaleString('en-CA')} and any planning notes (e.g. if near the $400K threshold, quarterly vs annual filing, ITC opportunities); (2) the estimated corporate tax of $${Math.round(d.corpTax).toLocaleString('en-CA')} and salary/dividend mix considerations for the owner. Be specific and practical. Professional tone, no bullet points, no headers.\n\nFINANCIAL DATA:\n${financialContext}`
+    },
+    {
+      key: 'recommendations',
+      label: 'CFO Recommendations',
+      statusText: 'Generating strategic recommendations...',
+      statusSub: 'Finalising action items and priorities',
+      prompt: `You are a Virtual CFO. Write 2 paragraphs of forward-looking CFO recommendations for ${corpName} (${industry})${notes ? ', keeping in mind: ' + notes : ''}. Paragraph 1: top 3 financial priorities for the next 90 days (specific, actionable). Paragraph 2: longer-term strategic considerations for the fiscal year — payroll optimisation, retained earnings, investment opportunities, succession or growth planning. Reference specific numbers from their data. Write as a trusted advisor. Professional tone, no bullet points, no headers.\n\nFINANCIAL DATA:\n${financialContext}`
+    }
+  ];
+
+  // ── CALL API — ONCE PER SECTION ──
+  const sectionResults = {};
+  for (const section of sections) {
+    statusText.textContent = section.statusText;
+    statusSub.textContent  = section.statusSub;
+    try {
+      const resp = await fetch(PROXY_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          model: 'claude-sonnet-4-20250514',
+          max_tokens: 1000,
+          messages: [{ role: 'user', content: section.prompt }]
+        })
+      });
+      const data = await resp.json();
+      if (data.error) {
+        sectionResults[section.key] = `⚠️ API error: ${data.error.message || 'Unknown error'}. Please check your API key.`;
+      } else {
+        sectionResults[section.key] = data.content?.[0]?.text || 'Unable to generate this section.';
+      }
+    } catch (e) {
+      sectionResults[section.key] = 'AI generation unavailable. Please check your connection and try again.';
+    }
+  }
+
+  statusText.textContent = 'Assembling report...';
+  statusSub.textContent  = 'Formatting your Business Review';
+
+  const nameDisplay = opName && opName !== corpName ? `${corpName}<br><span style="font-size:13px;font-weight:400;color:#6b6b6b">${opName}</span>` : corpName;
+
+  const reportHTML = `
+    <div style="max-width:860px;margin:0 auto;background:#fff;border:1px solid var(--border);border-radius:8px;padding:56px 64px;font-family:'DM Sans',sans-serif">
+
+      <!-- COVER -->
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;padding-bottom:24px;margin-bottom:32px;border-bottom:3px solid #000">
+        <div>
+          <div style="font-size:10px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:var(--amber);margin-bottom:8px">Orientum Advisory</div>
+          <div style="font-family:'Playfair Display',serif;font-size:30px;font-weight:900;color:#000;line-height:1.15">Business Review<br>Report</div>
+          <div style="font-size:13px;color:#6b6b6b;margin-top:8px">Prepared by ${preparer} &nbsp;·&nbsp; ${today}</div>
+        </div>
+        <div style="text-align:right">
+          <div style="font-size:16px;font-weight:700;color:#000;line-height:1.4">${nameDisplay}</div>
+          ${bn !== '—' ? `<div style="font-size:12px;color:#6b6b6b;margin-top:4px">BN: ${bn}</div>` : ''}
+          <div style="font-size:12px;color:#6b6b6b">Year End: ${yearEnd}</div>
+          ${meeting ? `<div style="font-size:12px;color:#6b6b6b">Meeting: ${meeting}</div>` : ''}
+        </div>
+      </div>
+
+      <!-- KPI STRIP -->
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:#e8e6e0;border:1px solid #e8e6e0;border-radius:6px;overflow:hidden;margin-bottom:36px">
+        ${[
+          ['Annual Revenue', '$'+Math.round(d.gross).toLocaleString('en-CA'), ''],
+          ['Net Revenue', '$'+Math.round(d.netRev).toLocaleString('en-CA'), 'after HST'],
+          ['Monthly Balance', '$'+Math.round(d.balance).toLocaleString('en-CA'), (d.balance>=0?'surplus':'deficit')],
+          ['HST Payable', '$'+Math.round(d.hstPayable).toLocaleString('en-CA'), hstMethodLabel]
+        ].map(([label,val,sub])=>`
+          <div style="background:#fff;padding:16px 18px">
+            <div style="font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#a8a8a8;margin-bottom:6px">${label}</div>
+            <div style="font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:#000">${val}</div>
+            ${sub?`<div style="font-size:11px;color:#6b6b6b;margin-top:2px">${sub}</div>`:''}
+          </div>`).join('')}
+      </div>
+
+      <!-- AI NARRATIVE SECTIONS -->
+      ${sections.map(s => `
+      <div style="margin-bottom:32px">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px">
+          <div style="height:2px;width:28px;background:var(--amber);flex-shrink:0"></div>
+          <div style="font-family:'Playfair Display',serif;font-size:17px;font-weight:700;color:#000">${s.label}</div>
+        </div>
+        <div style="font-size:13.5px;line-height:1.85;color:#2d2d2d">${(sectionResults[s.key]||'').split('\n\n').map(p=>`<p style="margin-bottom:14px">${p.trim()}</p>`).join('')}</div>
+      </div>`).join('')}
+
+      <!-- DATA TABLES -->
+      <div style="margin-top:36px;padding-top:28px;border-top:2px solid #e8e6e0">
+        <div style="font-family:'Playfair Display',serif;font-size:17px;font-weight:700;color:#000;margin-bottom:16px">Supporting Data</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+          <div>
+            <div style="font-size:10px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#a8a8a8;margin-bottom:8px">Revenue Overview</div>
+            <table style="width:100%;border-collapse:collapse;font-size:12.5px">
+              ${[['Gross Revenue','$'+Math.round(d.gross).toLocaleString('en-CA')],['HST Collected','$'+Math.round(d.hstColl).toLocaleString('en-CA')],['HST Remittable ('+hstMethodLabel+')','$'+Math.round(d.hstPayable).toLocaleString('en-CA')],['Net to Corporation','$'+Math.round(d.netRev).toLocaleString('en-CA')]].map(([l,v],i)=>`<tr style="background:${i%2?'#fafaf8':'#fff'}"><td style="padding:7px 10px;color:#444">${l}</td><td style="padding:7px 10px;text-align:right;font-weight:600">${v}</td></tr>`).join('')}
+            </table>
+          </div>
+          <div>
+            <div style="font-size:10px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#a8a8a8;margin-bottom:8px">Monthly Budget</div>
+            <table style="width:100%;border-collapse:collapse;font-size:12.5px">
+              ${[['Total Income','$'+Math.round(d.totalInc).toLocaleString('en-CA')],['Business Expenses','$'+Math.round(d.business).toLocaleString('en-CA')],['Housing','$'+Math.round(d.housing).toLocaleString('en-CA')],['Financial/Savings','$'+Math.round(d.financial).toLocaleString('en-CA')],['Net Balance','$'+Math.round(d.balance).toLocaleString('en-CA')]].map(([l,v],i)=>`<tr style="background:${i%2?'#fafaf8':'#fff'}"><td style="padding:7px 10px;color:#444">${l}</td><td style="padding:7px 10px;text-align:right;font-weight:600">${v}</td></tr>`).join('')}
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- FOOTER -->
+      <div style="margin-top:36px;padding-top:16px;border-top:1px solid #e8e6e0;display:flex;justify-content:space-between;align-items:center;font-size:11px;color:#a8a8a8">
+        <span>Generated by Orientum Virtual CFO Stack &nbsp;·&nbsp; AI-Powered Business Review</span>
+        <span>${today}</span>
+      </div>
+    </div>
+  `;
+
+  // ── LOCK THE REPORT ──
+  reportLocked = true;
+  lockedReportHTML = reportHTML;
+
+  preview.innerHTML = reportHTML;
+  preview.style.display = 'block';
+  statusBar.style.display = 'none';
+
+  // Show lock overlay & badge
+  if (overlay) {
+    document.getElementById('report-generated-time').textContent = `${today} at ${timeNow}`;
+    overlay.style.display = 'flex';
+  }
+  if (badge)    badge.style.display = 'inline-flex';
+  if (btnUnlock) btnUnlock.style.display = 'inline-block';
+  if (btnGen)    btnGen.style.display = 'none';
+  if (infoCard)  infoCard.style.opacity = '0.5';
+
+  preview.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+function collectFinancialData() {
+  const gross     = num('rev-per-period') * (parseInt(document.getElementById('period-type')?.value) || 52);
+  const hstRate   = num('hst-rate') / 100;
+  const quickRate = num('quick-rate') / 100;
+  const hstColl   = gross * hstRate;
+  const total     = gross + hstColl;
+  const hstRem    = total * quickRate;
+  const netRev    = gross - hstRem;
+  const totalInc  = num('inc-business')+num('inc-employment')+num('inc-investment')+num('inc-rental')+num('inc-custom')+num('inc-other');
+  const housing   = num('h-mortgage')+num('h-electricity')+num('h-water')+num('h-waste')+num('h-heating')+num('h-insurance')+num('h-tax')+num('h-condo')+num('h-parking')+num('h-repairs');
+  const business  = num('be-occupancy')+num('be-utilities')+num('be-office-rent')+num('be-internet')+num('be-cell')+num('be-software')+num('be-supplies')+
+                    num('be-salaries')+num('be-subcontractors')+num('be-accounting')+num('be-legal')+num('be-consulting')+num('be-training')+
+                    num('be-advertising')+num('be-entertainment')+num('be-dining')+num('be-gifts')+num('be-charity')+
+                    num('be-insurance')+num('be-memberships')+num('be-bank')+num('be-taxes-licences')+num('be-bad-debts')+num('be-uniforms')+num('be-activities')+
+                    num('be-travel')+num('be-vehicle')+getOtherExpensesTotal();
+  const medical   = num('me-prescriptions')+num('me-insurance')+num('me-dental')+num('me-other');
+  const pets      = num('pet-food')+num('pet-vet')+num('pet-insurance')+num('pet-grooming');
+  const family    = num('fam-support')+num('fam-extra')+num('fam-tuition')+num('fam-daycare')+num('fam-tutoring')+num('fam-other');
+  const transport = num('tr-transit')+num('tr-rideshare')+num('tr-car-ins')+num('tr-gas')+num('tr-maintenance')+num('tr-instalments')+num('tr-roadside')+num('tr-other');
+  const disc      = num('disc-internet')+num('disc-cell')+num('disc-streaming')+num('disc-clothes')+num('disc-entertainment')+num('disc-dining')+num('disc-groceries')+num('disc-activities')+num('disc-gifts')+num('disc-charity')+num('disc-personal-care')+num('disc-travel')+num('disc-other');
+  const financial = num('fin-debt')+num('fin-life-ins')+num('fin-disability')+num('fin-rrsp')+num('fin-tfsa')+num('fin-resp')+num('fin-investments')+num('fin-savings')+num('fin-tuition');
+  const totalExp  = housing+business+medical+pets+family+transport+disc+financial;
+  const balance   = totalInc - totalExp;
+  const hstPayable= hstMethod === 'quick'
+    ? num('hst-gross')*num('hst-quick')/100 - num('hst-itc')
+    : (num('hst-gross')*num('hst-rate2')/100/(1+num('hst-rate2')/100)) - num('reg-exp-hst') - num('reg-itc-capital');
+  const corpTax   = Math.max(0, num('corp-rev')-num('corp-exp')-num('corp-salary')-num('corp-div')) * 0.122;
+  return { gross, netRev, hstColl, hstRem, total, totalInc, housing, business, medical, pets, family, transport, disc, financial, totalExp, balance, hstPayable, corpTax };
+}
+
+
+// ── INIT ──
+(function init() {
+  calcRevenue();
+  renderCategories();
+  calcBudget();
+  calcHST();
+  calcPayroll();
+  calcCorp();
+})();
+</script>
+
+</body>
+</html>
