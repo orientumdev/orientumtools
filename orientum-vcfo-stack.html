@@ -646,7 +646,7 @@
   </div>
   <span class="header-label">Virtual CFO Stack</span>
   <div class="header-actions">
-    <button class="btn-ghost" onclick="switchPanel('panel-report');generateReport()">📄 Generate Report</button>
+    <button class="btn-primary" onclick="window.print()">Export PDF</button>
     <button class="btn-primary" onclick="window.print()">Export PDF</button>
   </div>
 </header>
@@ -656,7 +656,7 @@
   <div class="nav-tab active" onclick="switchPanel('panel-overview', this)">Revenue Overview</div>
   <div class="nav-tab" onclick="switchPanel('panel-budget', this)">Monthly Budget</div>
   <div class="nav-tab" onclick="switchPanel('panel-calc', this)">Detailed Calculations</div>
-  <div class="nav-tab" onclick="switchPanel('panel-report', this);generateReport()">Report Generator</div>
+  <div class="nav-tab" onclick="switchPanel('panel-report', this)">Report Generator</div>
 </nav>
 
 <!-- ═══════════════════════════════════════════════
@@ -1762,7 +1762,7 @@
   <div id="report-placeholder" style="text-align:center;padding:70px 40px;color:var(--text-muted)">
     <div style="font-size:48px;margin-bottom:16px">🤖</div>
     <div style="font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:var(--coal);margin-bottom:8px">AI-Powered Business Review</div>
-    <div style="font-size:13.5px;max-width:480px;margin:0 auto;line-height:1.7;color:var(--text-secondary)">Enter your <strong>Anthropic API key</strong> above and fill in the client details, then click Generate. Claude writes a custom narrative — executive summary, revenue analysis, budget insights, HST strategy, and CFO recommendations. <strong>Generated once and locked</strong> — no repeat charges.</div>
+    <div style="font-size:13.5px;max-width:480px;margin:0 auto;line-height:1.7;color:var(--text-secondary)">Fill in the client details above, then click <strong>Generate AI Report</strong>. Claude will write a custom narrative for each section — executive summary, revenue analysis, budget insights, HST strategy, and CFO recommendations. <strong>Generated once and locked</strong> — no repeat charges.</div>
     <button class="btn-primary" style="margin-top:24px;padding:12px 28px;font-size:14px" onclick="generateAIReport()">🤖 Generate AI Report</button>
   </div>
 </div>
@@ -2311,10 +2311,13 @@ function unlockReport() {
 }
 
 async function generateAIReport() {
-  // ── PROXY URL — your Netlify function ──
-  const PROXY_URL = '/.netlify/functions/claude-proxy';
-
-  const corpName = document.getElementById('rpt-corp-name')?.value || 'the corporation';
+  // ── API KEY — stored in browser localStorage ──
+  const apiKey = localStorage.getItem('orientum_vcfo_apikey') || '';
+  if (!apiKey) {
+    const k = prompt('Enter your Anthropic API key (stored locally, never shared):\nGet one free at console.anthropic.com');
+    if (!k || !k.startsWith('sk-ant-')) { alert('Invalid API key — must start with sk-ant-'); return; }
+    localStorage.setItem('orientum_vcfo_apikey', k.trim());
+  }
   const bn       = document.getElementById('rpt-bn')?.value || '—';
   const opName   = document.getElementById('rpt-op-name')?.value || '';
   const yearEnd  = document.getElementById('rpt-yearend')?.value || '2025-12';
@@ -2422,9 +2425,14 @@ CORPORATE TAX ESTIMATE: $${Math.round(d.corpTax).toLocaleString('en-CA')}
     statusText.textContent = section.statusText;
     statusSub.textContent  = section.statusSub;
     try {
-      const resp = await fetch(PROXY_URL, {
+      const resp = await fetch('https://api.anthropic.com/v1/messages', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'x-api-key': localStorage.getItem('orientum_vcfo_apikey') || '',
+          'anthropic-version': '2023-06-01',
+          'anthropic-dangerous-direct-browser-access': 'true'
+        },
         body: JSON.stringify({
           model: 'claude-sonnet-4-20250514',
           max_tokens: 1000,
